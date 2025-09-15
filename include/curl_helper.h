@@ -6,12 +6,12 @@
 #define NULLTERM_RESPONSE 1
 
 struct Response {
-    char* data;
-    size_t size;
+  char *data;
+  size_t size;
 };
 
 int http_init();
-int http_perform(const char* url);
+int http_perform(const char *url);
 CURLcode http_get_result();
-char* http_get_response();
+char *http_get_response();
 void http_dispose();

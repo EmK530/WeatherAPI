@@ -1,8 +1,8 @@
 #include "curl_helper.h"
+#include "essentials.h"
 #include <curl/curl.h>
 #include <stdlib.h>
 #include <string.h>
-#include "essentials.h"
 
 CURL *curl = NULL;
 CURLcode result = CURLCODE_UNSET;
