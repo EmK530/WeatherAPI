@@ -22,6 +22,7 @@ char *template = "https://api.open-meteo.com/v1/"
 
 void list_cities() {
   const char *scan1 = cities;
+  /* todo 16 is to small for many location names */
   char name[16];
   while (*scan1 != '\0') {
     sscanf(scan1, "%16[^:]", name);
@@ -39,7 +40,9 @@ int find_city(char *input, char *name, double *lat, double *lon) {
   const char *scan1 = cities;
   while (*scan1 != '\0') {
     sscanf(scan1, "%16[^:]:%lf:%lf", name, lat, lon);
+    /* todo write own strcmp that is not case sensitive */
     if (strcmp(name, input) == 0) {
+      /* todo 0 is success, 1 is error */
       return 1;
     }
     scan1 = strchr(scan1, '\n');
