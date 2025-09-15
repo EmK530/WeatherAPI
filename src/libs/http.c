@@ -43,6 +43,11 @@ int http_perform(const char* url)
         printf("[HTTP] Cannot run http_perform with no cURL instance\n");
         return 0;
     }
+
+    free(resp.data);
+    resp.data = NULL;
+    resp.size = 0;
+
     curl_easy_setopt(curl, CURLOPT_URL, url);
     result = curl_easy_perform(curl);
     return 1;
