@@ -42,8 +42,7 @@ int http_perform(const char *url) {
     return 0;
   }
 
-  if(resp.data != NULL)
-  {
+  if (resp.data != NULL) {
     free(resp.data);
     resp.data = NULL;
     resp.size = 0;
