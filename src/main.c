@@ -5,6 +5,11 @@
 #include <string.h>
 
 int main() {
+  if (!http_init()) {
+    printf("Failed to initialize cURL!\n");
+    return 1;
+  }
+
   printf("Välkommen!\n\n");
 
   list_cities();
@@ -25,9 +30,6 @@ int main() {
       sprintf(url, template, lat, lon);
       printf("URL: \"%s\"\n", url);
 
-      if (!http_init()) {
-        continue;
-      }
       http_perform(url);
       CURLcode result = http_get_result();
       if (result == CURLE_OK) {
@@ -36,9 +38,10 @@ int main() {
       } else {
         printf("\nKunde inte ladda vädret!\n");
       }
-      http_dispose();
     }
   }
 
+  /* todo: this is unreachable, add a way to exit */
+  http_dispose();
   return 0;
 }

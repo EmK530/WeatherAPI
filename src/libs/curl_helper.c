@@ -42,6 +42,13 @@ int http_perform(const char *url) {
     return 0;
   }
 
+  if(resp.data != NULL)
+  {
+    free(resp.data);
+    resp.data = NULL;
+    resp.size = 0;
+  }
+
   sha256_hash(url, curHash);
   printf("[HTTP] Performing with hash: \"%s\"\n", curHash);
 
