@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "weather.h"
-#include "http.h"
+#include "curl_helper.h"
 
 int main()
 {
