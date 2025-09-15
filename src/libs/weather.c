@@ -20,6 +20,11 @@ const char *cities = "Stockholm:59.3293:18.0686\n"
 char *template = "https://api.open-meteo.com/v1/"
                  "forecast?latitude=%lf&longitude=%lf&current_weather=true";
 
+/* JJ
+These two only work for the test data. We need to build a parser that gets all
+the data into RAM so we only read from disk at startup.
+*/
+
 void list_cities() {
   const char *scan1 = cities;
   /* todo 16 is to small for many location names */

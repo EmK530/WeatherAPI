@@ -3,15 +3,31 @@
 #include <curl/curl.h>
 #include <stdlib.h>
 #include <string.h>
+/* JJ
+Remove global state from here?
+This file also have way to many funcitons IMO. WE
+never want to init and not perform, and never want to perform and not
+get_result etc. So it does not make sense to split it up. I would like to jsut
+call something like this from main: get_current_temp( location ) or
+get_forecast(location, days) or get_history(location, days) etc.
+ */
 
 CURL *curl = NULL;
 CURLcode result = CURLCODE_UNSET;
 struct Response resp = {0};
 char curHash[SHA256_HASH_SIZE];
+
 /* add 4th void* user pointer for using CURLOPT_WRITEDATA */
 size_t write_response(void *ptr, size_t size, size_t nmemb) {
   size_t total = size * nmemb;
 
+  /* JJ
+  this either makes it impossible to recieve binary data or impossible to
+  recieve string data.
+  Lets have two separate functions,
+  get_JSON_string_from_API and get_binary_from_API  (or something) so we can do
+  both.
+  */
 #ifdef NULLTERM_RESPONSE
   resp.data = realloc(resp.data, resp.size + total + 1);
 #else

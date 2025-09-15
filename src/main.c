@@ -5,6 +5,14 @@
 #include <string.h>
 
 int main() {
+  /*
+  suggestions (JJ):
+  - lets place all global state here
+  - i think we must call curl_global_init here, right now its called implicitly
+  by curl_easy_init at every API call. That will cause errors if we multithread.
+  And its supposed to be called only once per program run.
+  */
+
   if (!http_init()) {
     printf("Failed to initialize cURL!\n");
     return 1;
@@ -14,10 +22,16 @@ int main() {
 
   list_cities();
 
+  /* JJ Longest place name in the world is
+   * "Taumata­whakatangihanga­koauau­o­tamatea­turi­pukaka­piki­maunga­horo­nuku­pokai­whenua­ki­tana­tahu"
+   * (85 letters) */
   char input[16];
 
+  /* JJ lets make currently selected location a global object, like a location
+   * struct or something. We will need to reference it a lot. */
   char name[16];
   double lat, lon;
+
   while (1) {
     printf("\nSkriv in en stad att kolla vädret på: ");
     scanf("%15s", input);
