@@ -6,7 +6,7 @@
 CURL *curl = NULL;
 CURLcode result = CURLCODE_UNSET;
 struct Response resp = {0};
-
+/* add 4th void* user pointer for using CURLOPT_WRITEDATA */
 size_t write_response(void *ptr, size_t size, size_t nmemb) {
   size_t total = size * nmemb;
 
