@@ -2,10 +2,12 @@
 #include <curl/curl.h>
 #include <stdlib.h>
 #include <string.h>
+#include "essentials.h"
 
 CURL *curl = NULL;
 CURLcode result = CURLCODE_UNSET;
 struct Response resp = {0};
+char curHash[SHA256_HASH_SIZE];
 /* add 4th void* user pointer for using CURLOPT_WRITEDATA */
 size_t write_response(void *ptr, size_t size, size_t nmemb) {
   size_t total = size * nmemb;
@@ -39,6 +41,9 @@ int http_perform(const char *url) {
     printf("[HTTP] Cannot run http_perform with no cURL instance\n");
     return 0;
   }
+
+  sha256_hash(url, curHash);
+  printf("[HTTP] Performing with hash: \"%s\"\n", curHash);
 
   free(resp.data);
   resp.data = NULL;
