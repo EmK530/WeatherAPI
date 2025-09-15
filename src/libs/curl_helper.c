@@ -45,10 +45,6 @@ int http_perform(const char *url) {
   sha256_hash(url, curHash);
   printf("[HTTP] Performing with hash: \"%s\"\n", curHash);
 
-  free(resp.data);
-  resp.data = NULL;
-  resp.size = 0;
-
   curl_easy_setopt(curl, CURLOPT_URL, url);
   result = curl_easy_perform(curl);
   return 1;
