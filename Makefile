@@ -1,8 +1,9 @@
 CC := gcc
 CFLAGS := -Wall -Wextra -std=c90 -Iinclude -MMD -MP
-LFLAGS := -lcurl -lcrypto
+LFLAGS := -lcurl -ljansson -lcrypto
 SRC := $(shell find src -name '*.c')
 OBJ := $(patsubst src/%.c,build/%.o,$(SRC))
+BUILD_DIR := build
 DEP := $(OBJ:.o=.d)
 BIN := build/app
 
@@ -19,7 +20,7 @@ run: $(BIN)
 	./$(BIN)
 
 clean:
-	$(RM) $(BIN) $(OBJ) $(DEP)
+	$(RM) -rf $(BUILD_DIR)
 
 -include $(DEP)
 
