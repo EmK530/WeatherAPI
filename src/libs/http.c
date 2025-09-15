@@ -75,6 +75,7 @@ void http_dispose()
         curl_easy_cleanup(curl);
         curl = NULL;
         free(resp.data);
+        resp.data = NULL;
         resp.size = 0;
     }
 }
