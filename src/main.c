@@ -3,6 +3,7 @@
 #include <string.h>
 #include "weather.h"
 #include "curl_helper.h"
+#include "essentials.h"
 
 int main()
 {
@@ -26,7 +27,10 @@ int main()
         } else {
             char url[100];
             sprintf(url, template, lat, lon);
-            /* printf("URL: \"%s\"\n", url); */
+            printf("URL: \"%s\"\n", url);
+            char hash[SHA256_HASH_SIZE];
+            sha256_hash(url, hash);
+            printf("Hash: \"%s\"\n", hash);
 
             if(!http_init())
             {

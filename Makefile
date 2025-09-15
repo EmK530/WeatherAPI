@@ -1,6 +1,6 @@
 CC := gcc
 CFLAGS := -Wall -Wextra -std=c90 -Iinclude -MMD -MP
-LFLAGS := -lcurl
+LFLAGS := -lcurl -lcrypto
 SRC := $(shell find src -name '*.c')
 OBJ := $(patsubst src/%.c,build/%.o,$(SRC))
 DEP := $(OBJ:.o=.d)
