@@ -46,17 +46,16 @@ int http_init() {
   curl = curl_easy_init();
   if (!curl) {
     printf("[HTTP] Could not initialize cURL!\n");
-    return 0;
+    return 1;
   }
-  /* todo return 0 is success, return != 0 is error  */
   curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_response);
-  return 1;
+  return 0;
 }
 
 int http_perform(const char *url) {
   if (curl == NULL) {
     printf("[HTTP] Cannot run http_perform with no cURL instance\n");
-    return 0;
+    return 1;
   }
 
   if (resp.data != NULL) {
@@ -70,7 +69,7 @@ int http_perform(const char *url) {
 
   curl_easy_setopt(curl, CURLOPT_URL, url);
   result = curl_easy_perform(curl);
-  return 1;
+  return 0;
 }
 
 CURLcode http_get_result() {
