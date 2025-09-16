@@ -13,7 +13,7 @@ int main() {
   And its supposed to be called only once per program run.
   */
 
-  if (!http_init()) {
+  if (http_init()) {
     printf("Failed to initialize cURL!\n");
     return 1;
   }
