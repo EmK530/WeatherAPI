@@ -16,6 +16,7 @@ typedef struct {
 
 typedef struct {
   char name[MAX_LOCATION_NAME_LENGTH];
+  size_t id;
   double latitude;
   double longitude;
   int timezone_offset;
@@ -23,13 +24,23 @@ typedef struct {
 } location;
 
 typedef struct {
+  location *locations;
+  size_t number_of_locations;
+} location_list;
+
+typedef struct {
   location current_location;
-  location *known_locations;
+  location_list known_locations;
   char default_temp_unit; /* C or F */
   char *previous_api_call;
+  int exit;
   int error_code; /* 0 == OK */
+  char *error_message;
 } app_state;
 
-void app_state_init_defaults(app_state *);
+/* FUNCTIONS  */
+void app_init_defaults(app_state *);
+
+void set_current_location(app_state *, int);
 
 #endif /* APP_STATE_H */

@@ -1,15 +1,25 @@
 #include "app_state.h"
 #include "constants.h"
 #include "curl_helper.h"
+#include "ui_console.h"
 #include "weather.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 int main() {
-
   app_state app;
-  app_state_init_defaults(&app);
+  app_init_defaults(&app);
+
+  do {
+    print_available_locations(&app.known_locations);
+    set_current_location(&app, prompt_user_for_current_selection(&app));
+    if (app.exit) {
+      break;
+    }
+
+    print_current_location(&app.current_location);
+  } while (app.exit);
 
   /*
   suggestions (JJ):
@@ -23,10 +33,6 @@ int main() {
     printf("Failed to initialize cURL!\n");
     return 1;
   }
-
-  printf("Välkommen!\n\n");
-
-  list_cities();
 
   /* JJ Longest place name in the world is
    * "Taumata­whakatangihanga­koauau­o­tamatea­turi­pukaka­piki­maunga­horo­nuku­pokai­whenua­ki­tana­tahu"
