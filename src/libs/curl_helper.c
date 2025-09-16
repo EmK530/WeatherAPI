@@ -48,7 +48,6 @@ int http_init() {
     printf("[HTTP] Could not initialize cURL!\n");
     return 1;
   }
-  /* todo return 0 is success, return != 0 is error  */
   curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_response);
   return 0;
 }
