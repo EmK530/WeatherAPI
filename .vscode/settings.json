@@ -3,5 +3,8 @@
     "editor.formatOnSave": true,
     "editor.defaultFormatter": "xaver.clang-format",
     "C_Cpp.clang_format_fallbackStyle": "{ BasedOnStyle: LLVM }",
+    "files.associations": {
+        "typeinfo": "c"
+    },
 
 }

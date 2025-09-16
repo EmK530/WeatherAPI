@@ -1,3 +1,5 @@
+#include "app_state.h"
+#include "constants.h"
 #include "curl_helper.h"
 #include "weather.h"
 #include <stdio.h>
@@ -5,12 +7,16 @@
 #include <string.h>
 
 int main() {
+
+  app_state app;
+  app_state_init_defaults(&app);
+
   /*
   suggestions (JJ):
   - lets place all global state here
-  - i think we must call curl_global_init here, right now its called implicitly
-  by curl_easy_init at every API call. That will cause errors if we multithread.
-  And its supposed to be called only once per program run.
+  - i think we must call curl_global_init here, right now its called
+  implicitly by curl_easy_init at every API call. That will cause errors if
+  we multithread. And its supposed to be called only once per program run.
   */
 
   if (http_init()) {
