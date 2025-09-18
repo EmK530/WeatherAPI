@@ -13,14 +13,14 @@ size_t write_response(void *response, size_t size, size_t nmemb, void* userp) {
   int totalSize = curl->size + total + 1;
   if(curl->data == NULL)
   {
-    ptr = realloc(curl->data, totalSize);
+    ptr = (char*)malloc(totalSize);
   } else {
     ptr = realloc(curl->data, totalSize);
   }
 
   if(ptr == NULL)
   {
-    return 0; // Out of memory protection
+    return 0; /* Out of memory protection */
   }
 
   curl->data = ptr;
