@@ -3,98 +3,104 @@
 #include <curl/curl.h>
 #include <stdlib.h>
 #include <string.h>
-/* JJ
-Remove global state from here?
-This file also have way to many funcitons IMO. WE
-never want to init and not perform, and never want to perform and not
-get_result etc. So it does not make sense to split it up. I would like to jsut
-call something like this from main: get_current_temp( location ) or
-get_forecast(location, days) or get_history(location, days) etc.
- */
-
-CURL *curl = NULL;
-CURLcode result = CURLCODE_UNSET;
-struct Response resp = {0};
-char curHash[SHA256_HASH_SIZE];
 
 /* add 4th void* user pointer for using CURLOPT_WRITEDATA */
-size_t write_response(void *ptr, size_t size, size_t nmemb) {
+size_t write_response(void *response, size_t size, size_t nmemb, void* userp) {
   size_t total = size * nmemb;
+  cURL* curl = (cURL*)userp;
 
-  /* JJ
-  this either makes it impossible to recieve binary data or impossible to
-  recieve string data.
-  Lets have two separate functions,
-  get_JSON_string_from_API and get_binary_from_API  (or something) so we can do
-  both.
-  */
-#ifdef NULLTERM_RESPONSE
-  resp.data = realloc(resp.data, resp.size + total + 1);
-#else
-  resp.data = realloc(resp.data, resp.size + total);
-#endif
-  memcpy(resp.data + resp.size, ptr, total);
-  resp.size += total;
+  char* ptr = NULL;
+  int totalSize = curl->size + total + 1;
+  if(curl->data == NULL)
+  {
+    ptr = realloc(curl->data, totalSize);
+  } else {
+    ptr = realloc(curl->data, totalSize);
+  }
 
-#ifdef NULLTERM_RESPONSE
-  resp.data[resp.size] = '\0';
-#endif
+  if(ptr == NULL)
+  {
+    return 0; // Out of memory protection
+  }
+
+  curl->data = ptr;
+  memcpy(&(curl->data[curl->size]), response, total);
+  curl->size += total;
+  curl->data[curl->size] = 0;
+
   return total;
 }
 
-int http_init() {
-  curl = curl_easy_init();
-  if (!curl) {
+int curl_init(cURL* curl) {
+  memset(curl, 0, sizeof(cURL));
+  curl->curlInternal = curl_easy_init();
+  if (curl->curlInternal == NULL) {
     printf("[HTTP] Could not initialize cURL!\n");
-    return 1;
+    return 0;
   }
-  curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_response);
-  return 0;
+  curl_easy_setopt(curl->curlInternal, CURLOPT_WRITEFUNCTION, write_response);
+  curl_easy_setopt(curl->curlInternal, CURLOPT_WRITEDATA, (void*)curl);
+  return 1;
 }
 
-int http_perform(const char *url) {
-  if (curl == NULL) {
-    printf("[HTTP] Cannot run http_perform with no cURL instance\n");
-    return 1;
+int curl_perform(cURL* curl, const char *url) {
+  if (curl == NULL || curl->curlInternal == NULL) {
+    printf("[HTTP] Cannot run http_perform with invalid cURL instance\n");
+    return 0;
   }
 
-  if (resp.data != NULL) {
-    free(resp.data);
-    resp.data = NULL;
-    resp.size = 0;
+  if (curl->data != NULL) {
+    free(curl->data);
+    curl->data = NULL;
+    curl->size = 0;
   }
 
+  char curHash[SHA256_HASH_SIZE];
   sha256_hash(url, curHash);
   printf("[HTTP] Performing with hash: \"%s\"\n", curHash);
 
-  curl_easy_setopt(curl, CURLOPT_URL, url);
-  result = curl_easy_perform(curl);
-  return 0;
+  curl_easy_setopt(curl->curlInternal, CURLOPT_URL, url);
+  curl->result = curl_easy_perform(curl->curlInternal);
+  return 1;
 }
 
-CURLcode http_get_result() {
-  if (result == CURLCODE_UNSET) {
+CURLcode curl_get_result(cURL* curl) {
+  if (curl == NULL || curl->curlInternal == NULL) {
+    printf("[HTTP] Cannot run http_get_result with invalid cURL instance\n");
+    return 0;
+  }
+  if (curl->result == CURLCODE_UNSET) {
     printf("[HTTP] No result stored to return for http_get_result\n");
     return CURLCODE_UNSET;
   }
-  return result;
+  return curl->result;
 }
 
-char *http_get_response() {
-  if (result == CURLCODE_UNSET) {
-    printf("[HTTP] No result stored to return for http_get_response\n");
-    /* todo wrong return value */
-    return '\0';
+void curl_get_response(cURL* curl, char** data, size_t* size) {
+  if (curl == NULL || curl->curlInternal == NULL) {
+    printf("[HTTP] Cannot run http_get_response with invalid cURL instance\n");
+    return;
   }
-  return resp.data;
+  if (curl->result == CURLCODE_UNSET) {
+    printf("[HTTP] No result stored to return for http_get_response\n");
+    return;
+  }
+  *data = curl->data;
+  *size = curl->size;
 }
 
-void http_dispose() {
+void curl_dispose(cURL* curl) {
   if (curl != NULL) {
-    curl_easy_cleanup(curl);
-    curl = NULL;
-    free(resp.data);
-    resp.data = NULL;
-    resp.size = 0;
+    if(curl->curlInternal != NULL)
+    {
+      curl_easy_cleanup(curl);
+      curl = NULL;
+    }
+    if(curl->data != NULL)
+    {
+      free(curl->data);
+      curl->data = NULL;
+      curl->size = 0;
+    }
   }
 }
