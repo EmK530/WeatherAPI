@@ -1,5 +1,6 @@
 #include "curl_helper.h"
 #include "weather.h"
+#include "jansson_helper.h"
 #include <jansson.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -44,63 +45,10 @@ int main() {
     if (found == 0) {
       printf("Felaktig stad!\n");
     } else {
-      /* Check local cache first */
-      char cityFile[55];
-      snprintf(cityFile, sizeof(cityFile), "cache/%s.json", input);
-      /*  Finns staden lokalt? */
-      json_error_t error;
-      json_t *root = json_load_file(cityFile, 0, &error);
-      if (!root) { /* Staden finns inte lokalt */
-        fprintf(stderr, "Error loading JSON: %s (line %d, col %d)\n",
-                error.text, error.line, error.column);
-      } else { /* Staden finns lokalt */
-        json_t *current_weather = json_object_get(root, "current_weather");
-        if (!json_is_object(current_weather)) {
-          json_decref(root);
-        }
-
-        json_t *time_val = json_object_get(current_weather, "time");
-        if (!json_is_string(time_val)) {
-          json_decref(root);
-        }
-        const char *time_str = json_string_value(time_val);
-
-        struct tm tm_time = {0};
-        if (strptime(time_str, "%Y-%m-%dT%H:%M", &tm_time) == 0) {
-          fprintf(stderr, "Failed to parse time string: %s\n", time_str);
-          json_decref(root);
-        }
-
-        time_t weather_time = timegm(&tm_time);
-        time_t now = time(NULL);
-
-        json_t *interval_val = json_object_get(current_weather, "interval");
-        int interval = (json_is_integer(interval_val))
-                           ? (int)json_integer_value(interval_val)
-                           : 900;
-
-        double diff = difftime(now, weather_time);
-
-        /* // Är vädret gammalt? */
-        if (diff > interval) { /* // Vädret är gammalt */
-          printf("Vädret är gammalt. Hämtar nytt från meteo...\n");
-          json_decref(root);
-        } else { /* Vädret är inte gammalt */
-          json_t *temp_val = json_object_get(current_weather, "temperature");
-          json_t *wind_val = json_object_get(current_weather, "windspeed");
-
-          if (json_is_number(temp_val) && json_is_number(wind_val)) {
-            double temp = json_number_value(temp_val);
-            double wind = json_number_value(wind_val);
-
-            printf("Vädret är inte gammalt!\n");
-            printf("  Temperatur: %.1f °C\n", temp);
-            printf("  Vind: %.1f km/h\n", wind);
-          }
-          json_decref(root);
-          continue; /* jump to next main loop iteration if we find up to date
-                       weather in the cache */
-        }
+      if(check_weather_cache(name) == 0) /* If cache is loaded */
+      {
+        print_temperature(name);
+        continue;
       }
 
       char url[100];
@@ -120,10 +68,13 @@ int main() {
             fprintf(stderr, "JSON parsing error: %s (line %d, column %d)\n",
                     error.text, error.line, error.column);
           } else {
+            char cityFile[55];
+            snprintf(cityFile, sizeof(cityFile), "cache/%s.json", name);
             if (json_dump_file(root, cityFile, JSON_INDENT(4)) != 0) {
               fprintf(stderr, "Error writing JSON to file\n");
             } else {
               printf("JSON sparad till %s\n", cityFile);
+              print_temperature(name);
             }
             json_decref(root);
           }
