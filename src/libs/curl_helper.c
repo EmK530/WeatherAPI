@@ -1,5 +1,4 @@
 #include "curl_helper.h"
-#include "essentials.h"
 #include <curl/curl.h>
 #include <stdlib.h>
 #include <string.h>
@@ -54,10 +53,6 @@ int curl_perform(cURL* curl, const char *url) {
     curl->data = NULL;
     curl->size = 0;
   }
-
-  char curHash[SHA256_HASH_SIZE];
-  sha256_hash(url, curHash);
-  printf("[HTTP] Performing with hash: \"%s\"\n", curHash);
 
   curl_easy_setopt(curl->curlInternal, CURLOPT_URL, url);
   curl->result = curl_easy_perform(curl->curlInternal);

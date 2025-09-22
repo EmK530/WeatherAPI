@@ -15,7 +15,7 @@ int main() {
 
   cURL curl;
   if (!curl_init(&curl)) {
-    return 1; // error print is handled in curl_init
+    return 1; /* error print is handled in curl_init */
   }
 
   printf("Välkommen!\n\n");
