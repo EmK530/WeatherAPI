@@ -13,9 +13,9 @@ int main() {
   And its supposed to be called only once per program run.
   */
 
-  if (http_init()) {
-    printf("Failed to initialize cURL!\n");
-    return 1;
+  cURL curl;
+  if (!curl_init(&curl)) {
+    return 1; /* error print is handled in curl_init */
   }
 
   printf("Välkommen!\n\n");
@@ -44,11 +44,18 @@ int main() {
       sprintf(url, template, lat, lon);
       printf("URL: \"%s\"\n", url);
 
-      http_perform(url);
-      CURLcode result = http_get_result();
+      curl_perform(&curl, url);
+      CURLcode result = curl_get_result(&curl);
       if (result == CURLE_OK) {
-        char *resp = http_get_response();
-        printf("\n%s\n", resp);
+        char* resp = NULL;
+        size_t size = 0;
+        curl_get_response(&curl, &resp, &size);
+        if(resp != NULL)
+        {
+          printf("\n%s\n", resp);
+        } else {
+          printf("\nKunde inte ladda data från cURL!\n");
+        }
       } else {
         printf("\nKunde inte ladda vädret!\n");
       }
@@ -56,6 +63,6 @@ int main() {
   }
 
   /* todo: this is unreachable, add a way to exit */
-  http_dispose();
+  curl_dispose(&curl);
   return 0;
 }

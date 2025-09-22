@@ -3,15 +3,17 @@
 #include <curl/curl.h>
 
 #define CURLCODE_UNSET ((CURLcode)0xFFFFFFFF)
-#define NULLTERM_RESPONSE 1
 
-struct Response {
-  char *data;
+typedef struct
+{
+  CURL* curlInternal;
+  CURLcode result;
   size_t size;
-};
+  char* data;
+} cURL;
 
-int http_init();
-int http_perform(const char *url);
-CURLcode http_get_result();
-char *http_get_response();
-void http_dispose();
+int curl_init(cURL* curl);
+int curl_perform(cURL* curl, const char *url);
+CURLcode curl_get_result(cURL* curl);
+void curl_get_response(cURL* curl, char** data, size_t* size);
+void curl_dispose(cURL* curl);
