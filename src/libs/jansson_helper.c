@@ -101,8 +101,8 @@ int does_json_exist(char* cityName)
     json_error_t error;
     json_t *root = json_load_file(cityFile, 0, &error);
     if (!root) {
-        fprintf(stderr, "Error loading JSON: %s (line %d, col %d)\n",
-        error.text, error.line, error.column);
+        /* fprintf(stderr, "Error loading JSON: %s (line %d, col %d)\n",
+        error.text, error.line, error.column); */
         return 1; /* Staden finns inte lokalt */
     }
 
@@ -183,9 +183,9 @@ int print_weather(char* cityName)
     if (json_is_number(temp_val) && json_is_number(wind_val)) {
         double temp = json_number_value(temp_val);
         double wind = json_number_value(wind_val);
-
-        printf("\n  Temperatur: %.1f °C\n", temp);
-        printf("  Vind: %.1f km/h\n", wind);
+        
+        printf("\nTemperature: %.1f °C\n", temp);
+        printf("Wind: %.1f km/h\n", wind);
     }
 
     json_decref(root);
