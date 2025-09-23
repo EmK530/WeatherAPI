@@ -1,18 +1,44 @@
 CC := gcc
-CFLAGS := -g -Wall -Wextra -std=c11 -Iinclude -MMD -MP
-LFLAGS := -lcurl -ljansson
-SRC := $(shell find src -name '*.c')
-OBJ := $(patsubst src/%.c,build/%.o,$(SRC))
+CFLAGS := -g -Wall -Wextra -std=c11 -MMD -MP
+LFLAGS := -lcurl
+
+# Directories
+SRC_DIR := src
+JANSSON_DIR := src/libs/jansson
 BUILD_DIR := build
+INC_DIR := include
+
+# Include paths
+CFLAGS += -I$(INC_DIR) -I$(JANSSON_DIR)
+
+# Source files
+PROJECT_SRC := $(shell find $(SRC_DIR) -name '*.c' -not -path '$(JANSSON_DIR)/*')
+JANSSON_SRC := $(wildcard $(JANSSON_DIR)/*.c)
+ALL_SRC := $(PROJECT_SRC) $(JANSSON_SRC)
+
+# Object files
+PROJECT_OBJ := $(patsubst $(SRC_DIR)/%.c,$(BUILD_DIR)/%.o,$(PROJECT_SRC))
+JANSSON_OBJ := $(patsubst $(JANSSON_DIR)/%.c,$(BUILD_DIR)/jansson/%.o,$(JANSSON_SRC))
+OBJ := $(PROJECT_OBJ) $(JANSSON_OBJ)
+
+# Dependency files
 DEP := $(OBJ:.o=.d)
-BIN := build/app
+
+# Final executable
+BIN := $(BUILD_DIR)/weatherapi
 
 all: $(BIN)
 
 $(BIN): $(OBJ)
 	$(CC) $(CFLAGS) $^ -o $@ $(LFLAGS)
 
-build/%.o: src/%.c
+# Rule for project source files
+$(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
+	@mkdir -p $(@D)
+	$(CC) $(CFLAGS) -c $< -o $@
+
+# Rule for jansson source files
+$(BUILD_DIR)/jansson/%.o: $(JANSSON_DIR)/%.c
 	@mkdir -p $(@D)
 	$(CC) $(CFLAGS) -c $< -o $@
 

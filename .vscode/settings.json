@@ -5,7 +5,82 @@
     "C_Cpp.clang_format_fallbackStyle": "{ BasedOnStyle: LLVM }",
     "files.associations": {
         "curl.h": "c",
-        "time.h": "c"
+        "time.h": "c",
+        "stdint.h": "c",
+        "stdio.h": "c"
     },
-
+    "todo-tree.general.statusBar": "total",
+    "todo-tree.general.tags": [
+        "todo",
+        "todO",
+        "toDo",
+        "toDO",
+        "tOdo",
+        "tOdO",
+        "tODo",
+        "tODO",
+        "Todo",
+        "TodO",
+        "ToDo",
+        "ToDO",
+        "TOdo",
+        "TOdO",
+        "TODo",
+        "TODO",
+        "fix",
+        "fiX",
+        "fIx",
+        "fIX",
+        "Fix",
+        "FiX",
+        "FIx",
+        "FIX",
+        "note",
+        "notE",
+        "noTe",
+        "noTE",
+        "nOte",
+        "nOtE",
+        "nOTe",
+        "nOTE",
+        "Note",
+        "NotE",
+        "NoTe",
+        "NoTE",
+        "NOte",
+        "NOtE",
+        "NOTe",
+        "NOTE"
+    ],
+    "todo-tree.general.tagGroups": {
+        "TODO": ["todo", "todO", "toDo", "toDO", "tOdo", "tOdO", "tODo", "tODO", "Todo", "TodO", "ToDo", "ToDO", "TOdo", "TOdO", "TODo", "TODO"],
+        "FIX": ["fix", "fiX", "fIx", "fIX", "Fix", "FiX", "FIx", "FIX"],
+        "NOTE": ["note", "notE", "noTe", "noTE", "nOte", "nOtE", "nOTe", "nOTE", "Note", "NotE", "NoTe", "NoTE", "NOte", "NOtE", "NOTe", "NOTE"]
+    },
+    "todo-tree.highlights.customHighlight": {
+        "TODO": {
+            "icon": "check",
+            "type": "tag",
+            "foreground": "#FFFF00",
+            "background": "#FF8C00",
+            "opacity": 50,
+            "iconColour": "#FFFF00"
+        },
+        "FIX": {
+            "icon": "tools",
+            "type": "tag",
+            "foreground": "#FFFFFF",
+            "background": "#FF4444",
+            "opacity": 50,
+            "iconColour": "#FF4444"
+        },
+        "NOTE": {
+            "icon": "note",
+            "type": "tag",
+            "foreground": "#FFFFFF",
+            "background": "#2196F3",
+            "opacity": 50,
+            "iconColour": "#2196F3"
+        }
+    }
 }
