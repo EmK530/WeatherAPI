@@ -98,8 +98,6 @@ int does_json_exist(char *cityName) {
   json_error_t error;
   json_t *root = json_load_file(cityFile, 0, &error);
   if (!root) {
-    /* fprintf(stderr, "Error loading JSON: %s (line %d, col %d)\n",
-    error.text, error.line, error.column); */
     return 1; /* Staden finns inte lokalt */
   }
 
