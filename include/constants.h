@@ -1,0 +1,8 @@
+#ifndef CONSTANTS_H
+#define CONSTANTS_H
+
+#define MAX_LOCATION_NAME_LENGTH 128
+#define MAX_URL_LENGTH 256
+#define MAX_LOCATIONS 1024
+
+#endif /* CONSTANTS_H */
