@@ -1,7 +1,7 @@
+#include "city.h"
 #include "curl_helper.h"
 #include "jansson_helper.h"
 #include "libs/jansson/jansson.h"
-#include "weather.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -37,6 +37,8 @@ int main() {
   if (!curl_init(&curl)) {
     return 1; /* error print is handled in curl_init */
   }
+
+  City_parse_cities(NULL, (char *)cities);
 
   printf("Välkommen!\n\n");
 
