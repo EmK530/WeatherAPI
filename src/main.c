@@ -1,6 +1,6 @@
 #include "curl_helper.h"
-#include "weather.h"
 #include "jansson_helper.h"
+#include "weather.h"
 #include <jansson.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -8,7 +8,23 @@
 #include <time.h>
 
 int main() {
+  /*   JJ: DETTA ÄR HUVUDLOOPEN VI KAN ANVÄNDA OM VI VILL KÖRA PÅ app_state OCH
+   ui_console GREJJERNA
 
+   app_state app;
+     app_init_defaults(&app);
+
+     do {
+       print_available_locations(&app.known_locations);
+       set_current_location(&app, prompt_user_for_current_selection(&app));
+       if (app.exit) {
+         break;
+       }
+
+       print_current_location(&app.current_location);
+     } while (app.exit);
+
+    */
   /*
   suggestions (JJ):
   - lets place all global state here
@@ -45,7 +61,7 @@ int main() {
     if (found == 0) {
       printf("Felaktig stad!\n");
     } else {
-      if(check_weather_cache(name) == 0) /* If cache is loaded */
+      if (check_weather_cache(name) == 0) /* If cache is loaded */
       {
         print_temperature(name);
         continue;
