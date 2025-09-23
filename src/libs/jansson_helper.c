@@ -1,4 +1,4 @@
-#include "jansson.h"
+#include "jansson/jansson.h"
 #include <time.h>
 
 int check_weather_cache(char *cityName) {
