@@ -1,6 +1,6 @@
 #include "curl_helper.h"
-#include "jansson.h"
 #include "jansson_helper.h"
+#include "libs/jansson/jansson.h"
 #include "weather.h"
 #include <stdio.h>
 #include <stdlib.h>

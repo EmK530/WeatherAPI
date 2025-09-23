@@ -11,7 +11,8 @@
         "cstdint": "c",
         "array": "c",
         "string": "c",
-        "string_view": "c"
+        "string_view": "c",
+        "weather.h": "c"
     },
     "todo-tree.general.statusBar": "total",
     "todo-tree.general.tags": [
