@@ -77,9 +77,10 @@ city *City_create(char *_name, float _latitude, float _longitude) {
   return new_city;
 }
 
-void City_dispose(city *_city) {
-  free(_city->name);
-  free(_city);
+void City_dispose(void *_city) {
+  city *pcity = (city *)_city;
+  free(pcity->name);
+  free(pcity);
 }
 
 void City_parse_cities(LinkedList *_city_list, char *_city_data) {
