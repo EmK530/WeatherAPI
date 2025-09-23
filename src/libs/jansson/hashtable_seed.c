@@ -44,16 +44,18 @@
 #include "jansson.h"
 #include <stdint.h>
 
-/*  todo jimmy: commented out this to not get compile warning for unused
-funcitonstatic uint32_t buf_to_uint32(char *data) { size_t i; uint32_t result =
-0;
+/*  note jimmy:  Just an unused function warning
+ */
+static uint32_t buf_to_uint32(char *data) {
+  size_t i;
+  uint32_t result = 0;
 
   for (i = 0; i < sizeof(uint32_t); i++)
     result = (result << 8) | (unsigned char)data[i];
 
   return result;
 }
- */
+
 /* /dev/urandom */
 #if !defined(_WIN32) && defined(USE_URANDOM)
 static int seed_from_urandom(uint32_t *seed) {
