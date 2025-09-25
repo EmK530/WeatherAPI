@@ -1,3 +1,4 @@
+#include "app_state.h"
 #include "city.h"
 #include "curl_helper.h"
 #include "jansson_helper.h"
@@ -38,7 +39,9 @@ int main() {
     return 1; /* error print is handled in curl_init */
   }
 
-  City_parse_cities(NULL, (char *)cities);
+  // City_parse_cities(NULL, (char *)cities);
+  app_state *app = app_create();
+  app_init_defaults(app);
 
   printf("Välkommen!\n\n");
 

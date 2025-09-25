@@ -1,5 +1,6 @@
 #define _GNU_SOURCE
 #include "city.h"
+#include "linked_list.h"
 #include <app_state.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -81,7 +82,7 @@ void City_dispose(city *_city) {
   free(_city);
 }
 
-void City_parse_cities(void *_city_list, char *_city_data) {
+void City_parse_cities(LinkedList *_city_list, char *_city_data) {
 
   char *city_data_copy = strdup(_city_data);
 
@@ -108,11 +109,7 @@ void City_parse_cities(void *_city_list, char *_city_data) {
 
       city *new_city = City_create(name, atof(lat_str), atof(lon_str));
 
-      // TODO: add new_city to the linked list
-      // linked_list_add(_city_list, new_city);
-
-      printf("DEBUG: Added city: %s @ lat: %f lon: %f\n", new_city->name,
-             new_city->latitude, new_city->longitude);
+      LinkedList_append(_city_list, new_city);
 
       name = NULL;
       lat_str = NULL;

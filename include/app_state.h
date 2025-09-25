@@ -2,6 +2,7 @@
 #define APP_STATE_H
 
 #include "constants.h"
+#include "linked_list.h"
 #include <stddef.h>
 
 typedef struct {
@@ -30,7 +31,7 @@ typedef struct {
 
 typedef struct {
   location current_location;
-  location_list known_locations;
+  LinkedList *known_locations;
   char default_temp_unit; /* C or F */
   char *previous_api_call;
   int exit;
@@ -39,6 +40,8 @@ typedef struct {
 } app_state;
 
 /* FUNCTIONS  */
+app_state *app_create();
+
 void app_init_defaults(app_state *);
 
 void set_current_location(app_state *, int);
