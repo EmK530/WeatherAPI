@@ -38,7 +38,7 @@ int prompt_user_for_current_selection(app_state *_app) {
     }
 
     /* exit loop if selection is in range */
-    if (selection <= (int)_app->known_locations.number_of_locations) {
+    if (selection <= (int)_app->known_locations->size) {
       break;
     }
     printf("invalid selection\n");
