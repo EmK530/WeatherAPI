@@ -1,4 +1,9 @@
+#define _GNU_SOURCE
+#include "city.h"
+#include "linked_list.h"
+#include <app_state.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 const char *cities = "Stockholm:59.3293:18.0686\n"
@@ -25,6 +30,7 @@ These two only work for the test data. We need to build a parser that gets all
 the data into RAM so we only read from disk at startup.
 */
 
+// TODO: void list_cities(linked_list* _cities)
 void list_cities() {
   const char *scan1 = cities;
   /* todo 16 is to small for many location names */
@@ -41,6 +47,7 @@ void list_cities() {
   }
 }
 
+// TODO: city* get_city(linked_list* _cities, char* name)
 int find_city(char *input, char *name, double *lat, double *lon) {
   const char *scan1 = cities;
   while (*scan1 != '\0') {
@@ -58,4 +65,59 @@ int find_city(char *input, char *name, double *lat, double *lon) {
     }
   }
   return 0;
+}
+
+city *City_create(char *_name, float _latitude, float _longitude) {
+  city *new_city = (city *)malloc(sizeof(city));
+
+  new_city->name = strdup(_name);
+  new_city->latitude = _latitude;
+  new_city->longitude = _longitude;
+
+  return new_city;
+}
+
+void City_dispose(void *_city) {
+  city *pcity = (city *)_city;
+  free(pcity->name);
+  free(pcity);
+}
+
+void City_parse_cities(LinkedList *_city_list, char *_city_data) {
+
+  char *city_data_copy = strdup(_city_data);
+
+  char *current = city_data_copy;
+  char *name = NULL;
+  char *lat_str = NULL;
+  char *lon_str = NULL;
+
+  do {
+    if (name == NULL) {
+      name = current;
+    } else if (lat_str == NULL) {
+      if (*current == ':') {
+        *current = '\0';
+        lat_str = current + 1;
+      }
+    } else if (lon_str == NULL) {
+      if (*current == ':') {
+        *current = '\0';
+        lon_str = current + 1;
+      }
+    } else if (*current == '\n') {
+      *current = '\0';
+
+      city *new_city = City_create(name, atof(lat_str), atof(lon_str));
+
+      LinkedList_append(_city_list, new_city);
+
+      name = NULL;
+      lat_str = NULL;
+      lon_str = NULL;
+    }
+    current++;
+  } while (*current != '\0');
+
+  free(city_data_copy);
 }
