@@ -25,7 +25,7 @@ int app_state_populate_known_locations_from_testdata(app_state *_state) {
                            "Kiruna:67.8558:20.2253\n";
 
   if (_state->known_locations != NULL) {
-    LinkedList_dispose(_state->known_locations);
+    LinkedList_dispose(_state->known_locations, free);
   }
 
   _state->known_locations = LinkedList_create();
