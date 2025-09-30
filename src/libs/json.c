@@ -106,15 +106,58 @@ int jansson_weather_print(char *cityName, int parameter) {
     return -1;
   }
 
-  json_t *temp_val = json_object_get(current_weather, "temperature");
-  json_t *wind_val = json_object_get(current_weather, "windspeed");
-
-  if (json_is_number(temp_val) && json_is_number(wind_val)) {
-    double temp = json_number_value(temp_val);
-    double wind = json_number_value(wind_val);
-
-    printf("\nTemperature: %.1f °C\n", temp);
-    printf("Wind: %.1f km/h\n", wind);
+  switch (parameter) {
+    case 1: { // Time
+      json_t *time_val = json_object_get(current_weather, "time");
+      if (json_is_string(time_val)) {
+        printf("Time: %s\n", json_string_value(time_val));
+      }
+      break;
+    }
+    case 2: { // Interval
+      json_t *interval_val = json_object_get(current_weather, "interval");
+      if (json_is_integer(interval_val)) {
+        printf("Interval: %d seconds\n", (int)json_integer_value(interval_val));
+      }
+      break;
+    }
+    case 3: { // Temperature
+      json_t *temp_val = json_object_get(current_weather, "temperature");
+      if (json_is_number(temp_val)) {
+        printf("Temperature: %.2f °C\n", json_number_value(temp_val));
+      }
+      break;
+    }
+    case 4: { // Windspeed
+      json_t *wind_val = json_object_get(current_weather, "windspeed");
+      if (json_is_number(wind_val)) {
+        printf("Windspeed: %.2f km/h\n", json_number_value(wind_val));
+      }
+      break;
+    }
+    case 5: { // Winddirection
+      json_t *winddir_val = json_object_get(current_weather, "winddirection");
+      if (json_is_integer(winddir_val)) {
+        printf("Winddirection: %d°\n", (int)json_integer_value(winddir_val));
+      }
+      break;
+    }
+    case 6: { // Is_day
+      json_t *isday_val = json_object_get(current_weather, "is_day");
+      if (json_is_integer(isday_val)) {
+        printf("Is day: %s\n", (int)json_integer_value(isday_val) ? "Yes" : "No");
+      }
+      break;
+    }
+    case 7: { // Weathercode
+      json_t *wcode_val = json_object_get(current_weather, "weathercode");
+      if (json_is_integer(wcode_val)) {
+        printf("Weathercode: %d\n", (int)json_integer_value(wcode_val));
+      }
+      break;
+    }
+    default:
+      break;
   }
 
   json_decref(root);
