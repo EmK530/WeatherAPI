@@ -1,6 +1,11 @@
+#define _XOPEN_SOURCE 700
+#define _GNU_SOURCE
+
 #include "jansson_helper.h"
 #include "jansson/jansson.h"
 #include <time.h>
+#include <string.h>
+
 /**/
 int check_weather_cache(char *cityName) {
   /* Check local cache first */

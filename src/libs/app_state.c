@@ -1,5 +1,7 @@
 #include "app_state.h"
+#include "city.h"
 #include "constants.h"
+#include "linked_list.h"
 #include <malloc.h>
 #include <stdlib.h>
 
@@ -22,56 +24,23 @@ int app_state_populate_known_locations_from_testdata(app_state *_state) {
                            "Luleå:65.5848:22.1567\n"
                            "Kiruna:67.8558:20.2253\n";
 
-  if (_state->known_locations.locations != NULL) {
-    free(_state->known_locations.locations);
-    _state->known_locations.locations = NULL;
-    _state->known_locations.number_of_locations = 0;
+  if (_state->known_locations != NULL) {
+    LinkedList_dispose(_state->known_locations, City_dispose);
   }
 
-  /* count locations before malloc */
-  size_t locations_in_testdata = 0;
-  size_t i;
-  for (i = 0; test_data[i] != '\0'; i++) {
-    if (test_data[i] == '\n') {
-      locations_in_testdata++;
-    }
-  }
-
-  /* allocate enough memory for the locations */
-  location *temp_locations_pointer =
-      malloc(sizeof(location) * locations_in_testdata);
-  /* todo finish error handling */
-  if (temp_locations_pointer == NULL) {
-    _state->error_code = -1;
-    _state->error_message = "malloc failed";
-    exit(EXIT_FAILURE); /* dont hard exit here */
-    return -1;
-  }
-
-  /* load data from string into memory. put data into state as long as we can
-   * get 3 things at a time from sscanf */
-  int length_of_read_string = 0;
-  size_t offset = 0;
-  i = 0;
-  while (3 == sscanf(test_data + offset, "%[^:]:%lf:%lf%n",
-                     temp_locations_pointer[i].name,
-                     &temp_locations_pointer[i].latitude,
-                     &temp_locations_pointer[i].longitude,
-                     &length_of_read_string)) {
-
-    _state->known_locations.number_of_locations++;
-
-    /* +1 to skip over the '\n' at the end of each row */
-    offset = offset + length_of_read_string + 1;
-    i++;
-  }
-
-  _state->known_locations.locations = temp_locations_pointer;
+  _state->known_locations = LinkedList_create();
+  City_parse_cities(_state->known_locations, (char *)test_data);
 
   return 0;
 }
 
 /* EXTERNAL FUNCTIONS */
+app_state *app_create() {
+  app_state *app = (app_state *)malloc(sizeof(app_state));
+
+  return app;
+}
+
 void app_init_defaults(app_state *_state) {
   if (!_state)
     return;
@@ -85,8 +54,7 @@ void app_init_defaults(app_state *_state) {
   _state->current_location = default_location;
   _state->default_temp_unit = 'C';
   _state->previous_api_call = NULL;
-  _state->known_locations.locations = NULL;
-  _state->known_locations.number_of_locations = 0;
+  _state->known_locations = NULL;
   _state->exit = 0;
   _state->error_code = 0;
 
@@ -96,5 +64,8 @@ void app_init_defaults(app_state *_state) {
 
 void set_current_location(app_state *_state, int _selection) {
   /* structs can be copied in C, even if they have arrays inside them */
-  _state->current_location = _state->known_locations.locations[_selection - 1];
+  //_state->current_location = _state->known_locations.locations[_selection -
+  // 1];
+  _state++;
+  _selection++;
 }
