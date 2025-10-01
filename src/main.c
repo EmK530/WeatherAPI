@@ -3,6 +3,7 @@
 #include "curl_helper.h"
 #include "jansson_helper.h"
 #include "libs/jansson/jansson.h"
+#include "linked_list.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -33,17 +34,19 @@ int main() {
   by curl_easy_init at every API call. That will cause errors if we multithread.
   And its supposed to be called only once per program run.
   */
+  app_state *app = app_create();
+  app_init_defaults(app);
 
   cURL curl;
   if (!curl_init(&curl)) {
     return 1; /* error print is handled in curl_init */
   }
 
-  // City_parse_cities(NULL, (char *)cities);
-  app_state *app = app_create();
-  app_init_defaults(app);
-
   printf("Välkommen!\n\n");
+  app_list_cities(app);
+
+  free(app);
+  return 0;
 
   list_cities();
 
@@ -58,7 +61,8 @@ int main() {
   double lat, lon;
 
   while (1) {
-    printf("\nSkriv in en stad att kolla vädret på (\"exit\" för att avsluta): ");
+    printf(
+        "\nSkriv in en stad att kolla vädret på (\"exit\" för att avsluta): ");
     scanf("%15s", input);
 
     if (strcmp(input, "exit") == 0) {

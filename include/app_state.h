@@ -44,6 +44,7 @@ app_state *app_create();
 
 void app_init_defaults(app_state *);
 
-void set_current_location(app_state *, int);
+void app_list_cities(app_state *);
+// void set_current_location(app_state *, int);
 
 #endif /* APP_STATE_H */

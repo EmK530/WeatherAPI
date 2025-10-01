@@ -1,4 +1,7 @@
-#pragma once
+#ifndef JANSON_HELPER_H
+#define JANSON_HELPER_H
+
+#include "linked_list.h"
 
 int check_weather_cache(char *cityName);
 void print_temperature(char *cityName);
@@ -18,3 +21,7 @@ int does_json_exist(char *cityName);
 int is_weather_old(char *cityName);
 int print_weather(char *cityName);
 current_weather get_weather();
+int read_cities_from_file(char *file_name, LinkedList *list);
+int write_cities_to_file(char *file_name, LinkedList *list);
+
+#endif

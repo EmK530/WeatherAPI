@@ -83,7 +83,7 @@ void City_dispose(void *_city) {
   free(pcity);
 }
 
-void City_parse_cities(LinkedList *_city_list, char *_city_data) {
+void City_parse_cities(LinkedList *_city_list, const char *_city_data) {
 
   char *city_data_copy = strdup(_city_data);
 

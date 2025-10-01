@@ -6,6 +6,7 @@ LFLAGS := -lcurl
 SRC_DIR := src
 JANSSON_DIR := src/libs/jansson
 BUILD_DIR := build
+CACHE_DIR := cache
 INC_DIR := include
 
 # Include paths
@@ -46,7 +47,7 @@ run: $(BIN)
 	./$(BIN)
 
 clean:
-	$(RM) -rf $(BUILD_DIR)
+	$(RM) -rf $(BUILD_DIR) $(CACHE_DIR)
 
 -include $(DEP)
 

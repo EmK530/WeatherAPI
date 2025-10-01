@@ -2,9 +2,11 @@
 #define _GNU_SOURCE
 
 #include "jansson_helper.h"
+#include "city.h"
 #include "jansson/jansson.h"
-#include <time.h>
+#include "linked_list.h"
 #include <string.h>
+#include <time.h>
 
 /**/
 int check_weather_cache(char *cityName) {
@@ -16,9 +18,7 @@ int check_weather_cache(char *cityName) {
   json_error_t error;
   json_t *root = json_load_file(cityFile, 0, &error);
   if (!root) {
-    fprintf(stderr, "Error loading JSON: %s (line %d, col %d)\n", error.text,
-            error.line, error.column);
-    return 1; /* Staden finns inte lokalt */
+    return 1;
   }
 
   /* Staden finns lokalt, är den gammal? */
@@ -241,4 +241,65 @@ current_weather get_weather(char *cityName) {
 
   json_decref(root);
   return cw;
+}
+
+int read_cities_from_file(char *file_name, LinkedList *list) {
+
+  json_error_t error;
+  json_t *file = json_load_file(file_name, 0, &error);
+
+  if (!file) {
+    return 1;
+  }
+
+  if (!json_is_array(file)) {
+    json_decref(file);
+    return -1;
+  }
+  for (int i = 0; i < (int)json_array_size(file); i++) {
+    json_t *item = json_array_get(file, i);
+    json_t *name = json_object_get(item, "name");
+    json_t *latitude = json_object_get(item, "latitude");
+    json_t *longitude = json_object_get(item, "longitude");
+
+    if (!json_is_string(name)) {
+      json_decref(file);
+      return -1;
+    }
+    if (!json_is_real(latitude)) {
+      json_decref(file);
+      return -1;
+    }
+    if (!json_is_real(longitude)) {
+      json_decref(file);
+      return -1;
+    }
+
+    city *new_city =
+        City_create((char *)json_string_value(name), json_real_value(latitude),
+                    json_real_value(longitude));
+
+    LinkedList_append(list, new_city);
+  }
+  json_decref(file);
+  return 0;
+}
+
+int write_cities_to_file(char *file_name, LinkedList *list) {
+
+  json_t *city_list = json_array();
+
+  for (int i = 0; i < (int)list->size; i++) {
+    city *item = (city *)(LinkedList_get_index(list, i)->item);
+
+    json_t *city_tuple = json_object();
+    json_object_set_new(city_tuple, "name", json_string(item->name));
+    json_object_set_new(city_tuple, "latitude", json_real(item->latitude));
+    json_object_set_new(city_tuple, "longitude", json_real(item->longitude));
+
+    json_array_append_new(city_list, city_tuple);
+  }
+  int error = json_dump_file(city_list, file_name, JSON_INDENT(4));
+  json_decref(city_list);
+  return error;
 }
