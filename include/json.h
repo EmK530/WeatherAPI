@@ -10,6 +10,14 @@ typedef struct {
   int weathercode;
 } current_weather;
 
+enum {
+  PARAM_TEMPERATURE = 1,
+  PARAM_WIND_SPEED = 2,
+  PARAM_WIND_DIRECTION = 3,
+  PARAM_IS_DAY = 4,
+  PARAM_WEATHER_CODE = 5
+}
+
 // Jansson:
 int jansson_weather_exists(const char *cityName);
 int jansson_weather_is_stale(const char *cityName);
