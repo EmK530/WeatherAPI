@@ -1,3 +1,5 @@
+#ifdef JSON_H
+
 typedef struct {
   char time[32]; /* todo how long can a ISO 8601 time string be? 32 might be to small */
   int interval;
@@ -14,3 +16,5 @@ int jansson_weather_is_stale(const char *cityName);
 int jansson_weather_write(const char *cityName, const char *data);
 int jansson_weather_print(const char *cityName, int parameter);
 current_weather jansson_weather_fetch(const char *cityName);
+
+#endif

@@ -1,3 +1,5 @@
+#ifdef JSON_H
+
 #define _XOPEN_SOURCE 700
 #define _GNU_SOURCE
 
@@ -218,3 +220,5 @@ current_weather jansson_weather_fetch(char *cityName) {
   json_decref(root);
   return cw;
 }
+
+#endif
