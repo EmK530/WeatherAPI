@@ -58,8 +58,12 @@ int main() {
   double lat, lon;
 
   while (1) {
-    printf("\nSkriv in en stad att kolla vädret på: ");
+    printf("\nSkriv in en stad att kolla vädret på (\"exit\" för att avsluta): ");
     scanf("%15s", input);
+
+    if (strcmp(input, "exit") == 0) {
+      return 0;
+    }
 
     int found = find_city(input, name, &lat, &lon);
 
