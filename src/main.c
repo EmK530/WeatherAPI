@@ -1,9 +1,7 @@
 #include "app_state.h"
 #include "city.h"
-#include "curl_helper.h"
 #include "jansson_helper.h"
 #include "libs/jansson/jansson.h"
-#include "linked_list.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -37,15 +35,22 @@ int main() {
   app_state *app = app_create();
   app_init_defaults(app);
 
-  cURL curl;
-  if (!curl_init(&curl)) {
-    return 1; /* error print is handled in curl_init */
-  }
-
   printf("Välkommen!\n\n");
-  app_list_cities(app);
 
-  free(app);
+  char input[16];
+  int selection;
+
+  do {
+    app_list_cities(app);
+    scanf("%15s", input);
+    selection = atoi(input);
+    if (app_get_weather_by_index(app, selection - 1) >= 0) {
+      printf("%s\n", app->api_result);
+    }
+
+  } while (selection > 0);
+
+  app_dispose(app);
   return 0;
 
   list_cities();
@@ -53,7 +58,6 @@ int main() {
   /* JJ Longest place name in the world is
    * "Taumata­whakatangihanga­koauau­o­tamatea­turi­pukaka­piki­maunga­horo­nuku­pokai­whenua­ki­tana­tahu"
    * (85 letters) */
-  char input[16];
 
   /* JJ lets make currently selected location a global object, like a location
    * struct or something. We will need to reference it a lot. */
@@ -84,8 +88,9 @@ int main() {
       sprintf(url, template, lat, lon);
       printf("URL: \"%s\"\n", url);
 
-      curl_perform(&curl, url);
-      CURLcode result = curl_get_result(&curl);
+      // curl_perform(&curl, url);
+      // CURLcode result = curl_get_result(&curl);
+      /*
       if (result == CURLE_OK) {
         if (curl.data != NULL) {
           printf("%s\n", curl.data);
@@ -114,10 +119,11 @@ int main() {
       } else {
         printf("\nKunde inte ladda vädret!\n");
       }
+      */
     }
   }
 
   /* todo: this is unreachable, add a way to exit */
-  curl_dispose(&curl);
+  // curl_dispose(&curl);
   return 0;
 }

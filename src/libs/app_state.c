@@ -48,13 +48,17 @@ void app_dispose(app_state *_app) {
     LinkedList_dispose(_app->known_locations, City_dispose);
   }
 
+  curl_dispose(&_app->curl_handle);
   free(_app);
 }
 
-void app_init_defaults(app_state *_app) {
+int app_init_defaults(app_state *_app) {
   if (!_app)
-    return;
+    return -1;
 
+  if (!curl_init(&_app->curl_handle)) {
+    return 1; /* error print is handled in curl_init */
+  }
   // create cache folder if missing
   struct stat sb;
   if (!(stat("cache", &sb) == 0 && S_ISDIR(sb.st_mode))) {
@@ -71,13 +75,37 @@ void app_init_defaults(app_state *_app) {
     app_state_populate_known_locations_from_testdata(_app);
     write_cities_to_file("cache/cities.json", _app->known_locations);
   }
+  return 0;
 }
 
 void app_list_cities(app_state *_app) {
   for (int i = 0; i < (int)_app->known_locations->size; i++) {
     city *item = (city *)(LinkedList_get_index(_app->known_locations, i)->item);
-    printf("[%02d]: %s\n", i, item->name);
+    printf("[%02d]: %s\n", i + 1, item->name);
   }
+}
+
+int cache_json(city *_city, char *_json) {
+  _city++;
+  _json++;
+  return 0;
+}
+
+int app_get_weather_by_index(app_state *_app, int _index) {
+  if (_index >= (int)_app->known_locations->size) {
+    return -1;
+  }
+  city *item =
+      (city *)(LinkedList_get_index(_app->known_locations, _index)->item);
+
+  // TODO: check cache
+
+  int error = City_get_weather(&_app->curl_handle, item, &_app->api_result);
+  if (error < 0) {
+    return error;
+  }
+
+  cache_json(item, _app->api_result);
 }
 
 void set_current_location(app_state *_state, int _selection) {

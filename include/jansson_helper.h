@@ -23,5 +23,7 @@ int print_weather(char *cityName);
 current_weather get_weather();
 int read_cities_from_file(char *file_name, LinkedList *list);
 int write_cities_to_file(char *file_name, LinkedList *list);
+int write_cache(char *file_name, char *json);
+int read_cache(char *file_anem, char *buffer);
 
 #endif

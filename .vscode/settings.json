@@ -12,7 +12,9 @@
         "array": "c",
         "string": "c",
         "string_view": "c",
-        "weather.h": "c"
+        "weather.h": "c",
+        "linked_list.h": "c",
+        "functional": "c"
     },
     "todo-tree.general.statusBar": "total",
     "todo-tree.general.tags": [

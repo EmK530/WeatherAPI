@@ -121,3 +121,16 @@ void City_parse_cities(LinkedList *_city_list, const char *_city_data) {
 
   free(city_data_copy);
 }
+
+int City_get_weather(cURL *_curl, city *_city, char **_result) {
+  char url[200];
+  sprintf(url, template, _city->latitude, _city->longitude);
+  curl_perform(_curl, url);
+  CURLcode result = curl_get_result(_curl);
+  if (result == CURLE_OK) {
+    if (_curl->data != NULL) {
+      *_result = _curl->data;
+    }
+  }
+  return result;
+}
