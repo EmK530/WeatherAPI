@@ -14,7 +14,9 @@
         "string_view": "c",
         "weather.h": "c",
         "linked_list.h": "c",
-        "functional": "c"
+        "functional": "c",
+        "stddef.h": "c",
+        "constants.h": "c"
     },
     "todo-tree.general.statusBar": "total",
     "todo-tree.general.tags": [

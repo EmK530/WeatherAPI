@@ -4,21 +4,19 @@
 #include <string.h>
 
 /* add 4th void* user pointer for using CURLOPT_WRITEDATA */
-size_t write_response(void *response, size_t size, size_t nmemb, void* userp) {
+size_t write_response(void *response, size_t size, size_t nmemb, void *userp) {
   size_t total = size * nmemb;
-  cURL* curl = (cURL*)userp;
+  cURL *curl = (cURL *)userp;
 
-  char* ptr = NULL;
+  char *ptr = NULL;
   int totalSize = curl->size + total + 1;
-  if(curl->data == NULL)
-  {
-    ptr = (char*)malloc(totalSize);
+  if (curl->data == NULL) {
+    ptr = (char *)malloc(totalSize);
   } else {
     ptr = realloc(curl->data, totalSize);
   }
 
-  if(ptr == NULL)
-  {
+  if (ptr == NULL) {
     return 0; /* Out of memory protection */
   }
 
@@ -30,7 +28,7 @@ size_t write_response(void *response, size_t size, size_t nmemb, void* userp) {
   return total;
 }
 
-int curl_init(cURL* curl) {
+int curl_init(cURL *curl) {
   memset(curl, 0, sizeof(cURL));
   curl->curlInternal = curl_easy_init();
   if (curl->curlInternal == NULL) {
@@ -38,11 +36,11 @@ int curl_init(cURL* curl) {
     return 0;
   }
   curl_easy_setopt(curl->curlInternal, CURLOPT_WRITEFUNCTION, write_response);
-  curl_easy_setopt(curl->curlInternal, CURLOPT_WRITEDATA, (void*)curl);
+  curl_easy_setopt(curl->curlInternal, CURLOPT_WRITEDATA, (void *)curl);
   return 1;
 }
 
-int curl_perform(cURL* curl, const char *url) {
+int curl_perform(cURL *curl, const char *url) {
   if (curl == NULL || curl->curlInternal == NULL) {
     printf("[HTTP] Cannot run http_perform with invalid cURL instance\n");
     return 0;
@@ -59,7 +57,7 @@ int curl_perform(cURL* curl, const char *url) {
   return 1;
 }
 
-CURLcode curl_get_result(cURL* curl) {
+CURLcode curl_get_result(cURL *curl) {
   if (curl == NULL || curl->curlInternal == NULL) {
     printf("[HTTP] Cannot run http_get_result with invalid cURL instance\n");
     return 0;
@@ -71,7 +69,7 @@ CURLcode curl_get_result(cURL* curl) {
   return curl->result;
 }
 
-void curl_get_response(cURL* curl, char** data, size_t* size) {
+void curl_get_response(cURL *curl, char **data, size_t *size) {
   if (curl == NULL || curl->curlInternal == NULL) {
     printf("[HTTP] Cannot run http_get_response with invalid cURL instance\n");
     return;
@@ -84,15 +82,13 @@ void curl_get_response(cURL* curl, char** data, size_t* size) {
   *size = curl->size;
 }
 
-void curl_dispose(cURL* curl) {
+void curl_dispose(cURL *curl) {
   if (curl != NULL) {
-    if(curl->curlInternal != NULL)
-    {
-      curl_easy_cleanup(curl);
-      curl = NULL;
+    if (curl->curlInternal != NULL) {
+      curl_easy_cleanup(curl->curlInternal);
+      curl->curlInternal = NULL;
     }
-    if(curl->data != NULL)
-    {
+    if (curl->data != NULL) {
       free(curl->data);
       curl->data = NULL;
       curl->size = 0;

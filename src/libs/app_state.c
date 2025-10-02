@@ -47,8 +47,10 @@ void app_dispose(app_state *_app) {
   if (_app->known_locations != NULL) {
     LinkedList_dispose(_app->known_locations, City_dispose);
   }
-
   curl_dispose(&_app->curl_handle);
+  if (_app->current_location.current_weather) {
+    free(_app->current_location.current_weather);
+  }
   free(_app);
 }
 
@@ -57,7 +59,7 @@ int app_init_defaults(app_state *_app) {
     return -1;
 
   if (!curl_init(&_app->curl_handle)) {
-    return 1; /* error print is handled in curl_init */
+    return -1; /* error print is handled in curl_init */
   }
   // create cache folder if missing
   struct stat sb;
@@ -85,33 +87,40 @@ void app_list_cities(app_state *_app) {
   }
 }
 
-int cache_json(city *_city, char *_json) {
-  _city++;
-  _json++;
-  return 0;
-}
-
 int app_get_weather_by_index(app_state *_app, int _index) {
-  if (_index >= (int)_app->known_locations->size) {
+  if (_index >= (int)_app->known_locations->size || _index < 0) {
     return -1;
   }
   city *item =
       (city *)(LinkedList_get_index(_app->known_locations, _index)->item);
 
-  // TODO: check cache
-
-  int error = City_get_weather(&_app->curl_handle, item, &_app->api_result);
-  if (error < 0) {
-    return error;
+  weather *result = City_get_weather(&_app->curl_handle, item);
+  if (result == NULL) {
+    return -1;
   }
-
-  cache_json(item, _app->api_result);
+  if (_app->current_location.current_weather != NULL) {
+    free(_app->current_location.current_weather);
+  }
+  _app->current_location.name = item->name; // maybe strdup, might be more clean
+  _app->current_location.latitude = item->latitude;
+  _app->current_location.longitude = item->longitude;
+  _app->current_location.current_weather = result;
+  return 0;
 }
 
-void set_current_location(app_state *_state, int _selection) {
+void app_print_current_weather(app_state *_app) {
+  location loc = _app->current_location;
+  printf("\tLocation:\t%s\n"
+         "\tTemperature:\t%f\n"
+         "\tWindspeed:\t%f\n\n",
+         loc.name, loc.current_weather->temperature,
+         loc.current_weather->windspeed);
+}
+
+void set_current_location(app_state *_app, int _selection) {
   /* structs can be copied in C, even if they have arrays inside them */
   //_state->current_location = _state->known_locations.locations[_selection -
   // 1];
-  _state++;
+  _app++;
   _selection++;
 }

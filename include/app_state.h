@@ -8,12 +8,12 @@
 #include <stddef.h>
 
 typedef struct {
-  char name[MAX_LOCATION_NAME_LENGTH];
+  char *name;
   size_t id;
   double latitude;
   double longitude;
   int timezone_offset;
-  weather current_weather;
+  weather *current_weather;
 } location;
 
 typedef struct {
@@ -26,6 +26,7 @@ typedef struct {
   LinkedList *known_locations;
   cURL curl_handle;
   char default_temp_unit; /* C or F */
+  char *previous_api_call;
   char *api_result;
   int exit;
   int error_code; /* 0 == OK */
@@ -36,11 +37,12 @@ typedef struct {
 app_state *app_create();
 void app_dispose(app_state *_app);
 
-int app_init_defaults(app_state *);
+int app_init_defaults(app_state *_app);
 
-void app_list_cities(app_state *);
+void app_list_cities(app_state *_app);
 
 int app_get_weather_by_index(app_state *_app, int _index);
-// void set_current_location(app_state *, int);
+void app_print_current_weather(app_state *_app);
+// void set_current_location(app_state *_app, int _selection);
 
 #endif /* APP_STATE_H */

@@ -155,7 +155,7 @@ int is_weather_old(char *cityName) {
   return 1; /* Vädret är inte gammalt */
 }
 
-int print_weather(char *cityName) {
+int print_weather2(char *cityName) {
   char cityFile[55];
   snprintf(cityFile, sizeof(cityFile), "cache/%s.json", cityName);
 
@@ -302,4 +302,82 @@ int write_cities_to_file(char *file_name, LinkedList *list) {
   int error = json_dump_file(city_list, file_name, JSON_INDENT(4));
   json_decref(city_list);
   return error;
+}
+
+weather *parse_weather_json(char *json) {
+  json_error_t error;
+  json_t *weather_json = json_loads(json, 0, &error);
+
+  if (!weather_json) {
+    json_decref(weather_json);
+    return NULL;
+  }
+
+  json_t *current_weather = json_object_get(weather_json, "current_weather");
+  if (!current_weather) {
+    json_decref(weather_json);
+    return NULL;
+  }
+  json_t *time_val = json_object_get(current_weather, "time");
+  json_t *interval_val = json_object_get(current_weather, "interval");
+  json_t *temp_val = json_object_get(current_weather, "temperature");
+  json_t *wind_val = json_object_get(current_weather, "windspeed");
+  json_t *winddir_val = json_object_get(current_weather, "winddirection");
+  json_t *isday_val = json_object_get(current_weather, "is_day");
+  json_t *wcode_val = json_object_get(current_weather, "weathercode");
+
+  weather *result = (weather *)malloc(sizeof(weather));
+  if (json_is_string(time_val)) {
+    strncpy(result->time, json_string_value(time_val),
+            sizeof(result->time) - 1);
+  }
+  if (json_is_integer(interval_val)) {
+    result->interval = (int)json_integer_value(interval_val);
+  }
+  if (json_is_number(temp_val)) {
+    result->temperature = json_number_value(temp_val);
+  }
+  if (json_is_number(wind_val)) {
+    result->windspeed = json_number_value(wind_val);
+  }
+  if (json_is_integer(winddir_val)) {
+    result->winddirection = (int)json_integer_value(winddir_val);
+  }
+  if (json_is_integer(isday_val)) {
+    result->is_day = (int)json_integer_value(isday_val);
+  }
+  if (json_is_integer(wcode_val)) {
+    result->weathercode = (int)json_integer_value(wcode_val);
+  }
+  json_decref(weather_json);
+
+  // check data validity?
+  return result;
+}
+
+int write_weather_cache(char *file_name, char *data) {
+  json_error_t error;
+  json_t *weather_json = json_loads(data, 0, &error);
+
+  if (!weather_json) {
+    return -1;
+  }
+
+  json_dump_file(weather_json, file_name, JSON_INDENT(4));
+
+  json_decref(weather_json);
+  return 0;
+}
+
+char *read_weather_cache(char *file_name) {
+  json_error_t error;
+  json_t *weather_json = json_load_file(file_name, 0, &error);
+
+  if (!weather_json) {
+    return NULL;
+  }
+
+  char *raw_json = json_dumps(weather_json, 0);
+  json_decref(weather_json);
+  return raw_json;
 }

@@ -45,7 +45,7 @@ int main() {
     scanf("%15s", input);
     selection = atoi(input);
     if (app_get_weather_by_index(app, selection - 1) >= 0) {
-      printf("%s\n", app->api_result);
+      app_print_current_weather(app);
     }
 
   } while (selection > 0);

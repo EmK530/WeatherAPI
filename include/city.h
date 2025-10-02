@@ -8,7 +8,8 @@ extern char *template;
 typedef struct {
   char time[32];   /* ISO 8601 format, YYYY-MM-DDTHH:MM */
   size_t interval; /* 900 seconds = 15 min interval between measurements */
-  double celsius;  /* double needed for wind chill or heat index calculations */
+  double
+      temperature; /* double needed for wind chill or heat index calculations */
   double windspeed;
   float winddirection;
   char is_day; /* todo perhaps use bool? */
@@ -28,6 +29,6 @@ city *City_create(char *_name, float _latitude, float _longitude);
 void City_dispose(void *_city);
 void City_parse_cities(LinkedList *_city_list, const char *_city_data);
 
-int City_get_weather(cURL *_curl, city *_city, char **_result);
+weather *City_get_weather(cURL *_curl, city *_city);
 
 #endif

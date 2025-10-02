@@ -1,5 +1,6 @@
 #define _GNU_SOURCE
 #include "city.h"
+#include "jansson_helper.h"
 #include "linked_list.h"
 #include <app_state.h>
 #include <stdio.h>
@@ -122,15 +123,30 @@ void City_parse_cities(LinkedList *_city_list, const char *_city_data) {
   free(city_data_copy);
 }
 
-int City_get_weather(cURL *_curl, city *_city, char **_result) {
+weather *City_get_weather(cURL *_curl, city *_city) {
+  char file_name[50];
+  snprintf(file_name, 49, "cache/%s_%.2f_%.2f.json", _city->name,
+           _city->latitude, _city->longitude);
+
+  weather *weather_data = NULL;
+  char *data = read_weather_cache(file_name);
+  if (data != NULL) {
+    weather_data = parse_weather_json(data);
+    free(data);
+    if (weather_data != NULL) {
+      return weather_data;
+    }
+  }
+
   char url[200];
-  sprintf(url, template, _city->latitude, _city->longitude);
+  snprintf(url, 199, template, _city->latitude, _city->longitude);
   curl_perform(_curl, url);
   CURLcode result = curl_get_result(_curl);
   if (result == CURLE_OK) {
-    if (_curl->data != NULL) {
-      *_result = _curl->data;
+    weather_data = parse_weather_json(_curl->data);
+    if (weather_data != NULL) {
+      write_weather_cache(file_name, _curl->data);
     }
   }
-  return result;
+  return weather_data;
 }
