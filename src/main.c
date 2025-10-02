@@ -8,7 +8,6 @@
 #include <time.h>
 
 int main() {
-<<<<<<< HEAD
   /*   JJ: DETTA ÄR HUVUDLOOPEN VI KAN ANVÄNDA OM VI VILL KÖRA PÅ app_state OCH
    ui_console GREJJERNA
 
@@ -33,14 +32,6 @@ int main() {
   by curl_easy_init at every API call. That will cause errors if we multithread.
   And its supposed to be called only once per program run.
   */
-=======
-  cURL curl;
-  if (!curl_init(&curl)) {
-    return 1; /* error print is handled in curl_init */
-  }
-
-  // City_parse_cities(NULL, (char *)cities);
->>>>>>> cb78134dbd5460f43d2919a77955bcea96ed352c
   app_state *app = app_create();
   app_init_defaults(app);
 
@@ -64,13 +55,9 @@ int main() {
 
   list_cities();
 
-<<<<<<< HEAD
   /* JJ Longest place name in the world is
    * "Taumata­whakatangihanga­koauau­o­tamatea­turi­pukaka­piki­maunga­horo­nuku­pokai­whenua­ki­tana­tahu"
    * (85 letters) */
-=======
-  char input[16];
->>>>>>> cb78134dbd5460f43d2919a77955bcea96ed352c
 
   char name[16];
   double lat, lon;
@@ -134,11 +121,7 @@ int main() {
     }
   }
 
-<<<<<<< HEAD
   /* todo: this is unreachable, add a way to exit */
   // curl_dispose(&curl);
-=======
-  curl_dispose(&curl);
->>>>>>> cb78134dbd5460f43d2919a77955bcea96ed352c
   return 0;
 }
