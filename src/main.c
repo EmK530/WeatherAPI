@@ -9,31 +9,6 @@
 #include <time.h>
 
 int main() {
-  /*   JJ: DETTA ÄR HUVUDLOOPEN VI KAN ANVÄNDA OM VI VILL KÖRA PÅ app_state OCH
-   ui_console GREJJERNA
-
-   app_state app;
-     app_init_defaults(&app);
-
-     do {
-       print_available_locations(&app.known_locations);
-       set_current_location(&app, prompt_user_for_current_selection(&app));
-       if (app.exit) {
-         break;
-       }
-
-       print_current_location(&app.current_location);
-     } while (app.exit);
-
-    */
-  /*
-  suggestions (JJ):
-  - lets place all global state here
-  - i think we must call curl_global_init here, right now its called implicitly
-  by curl_easy_init at every API call. That will cause errors if we multithread.
-  And its supposed to be called only once per program run.
-  */
-
   cURL curl;
   if (!curl_init(&curl)) {
     return 1; /* error print is handled in curl_init */
@@ -47,18 +22,14 @@ int main() {
 
   list_cities();
 
-  /* JJ Longest place name in the world is
-   * "Taumata­whakatangihanga­koauau­o­tamatea­turi­pukaka­piki­maunga­horo­nuku­pokai­whenua­ki­tana­tahu"
-   * (85 letters) */
   char input[16];
 
-  /* JJ lets make currently selected location a global object, like a location
-   * struct or something. We will need to reference it a lot. */
   char name[16];
   double lat, lon;
 
   while (1) {
-    printf("\nSkriv in en stad att kolla vädret på (\"exit\" för att avsluta): ");
+    printf(
+        "\nSkriv in en stad att kolla vädret på (\"exit\" för att avsluta): ");
     scanf("%15s", input);
 
     if (strcmp(input, "exit") == 0) {
@@ -113,7 +84,6 @@ int main() {
     }
   }
 
-  /* todo: this is unreachable, add a way to exit */
   curl_dispose(&curl);
   return 0;
 }
