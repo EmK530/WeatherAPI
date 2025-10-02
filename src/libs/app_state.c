@@ -57,6 +57,7 @@ void app_dispose(app_state *_app) {
 int app_init_defaults(app_state *_app) {
   if (!_app)
     return -1;
+  memset(_app, 0, sizeof(app_state));
 
   if (!curl_init(&_app->curl_handle)) {
     return -1; /* error print is handled in curl_init */
