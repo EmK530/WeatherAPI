@@ -9,14 +9,11 @@
 #include <time.h>
 
 /**/
-int check_weather_cache(char *cityName) {
-  /* Check local cache first */
-  char cityFile[55];
-  snprintf(cityFile, sizeof(cityFile), "cache/%s.json", cityName);
+int check_weather_cache(char *file_name) {
 
   /*  Finns staden lokalt? */
   json_error_t error;
-  json_t *root = json_load_file(cityFile, 0, &error);
+  json_t *root = json_load_file(file_name, 0, &error);
   if (!root) {
     return 1;
   }

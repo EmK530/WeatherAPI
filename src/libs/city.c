@@ -129,15 +129,16 @@ weather *City_get_weather(cURL *_curl, city *_city) {
            _city->latitude, _city->longitude);
 
   weather *weather_data = NULL;
-  char *data = read_weather_cache(file_name);
-  if (data != NULL) {
-    weather_data = parse_weather_json(data);
-    free(data);
-    if (weather_data != NULL) {
-      return weather_data;
+  if (check_weather_cache(file_name) == 0) {
+    char *data = read_weather_cache(file_name);
+    if (data != NULL) {
+      weather_data = parse_weather_json(data);
+      free(data);
+      if (weather_data != NULL) {
+        return weather_data;
+      }
     }
   }
-
   char url[200];
   snprintf(url, 199, template, _city->latitude, _city->longitude);
   curl_perform(_curl, url);
