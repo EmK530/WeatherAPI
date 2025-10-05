@@ -26,7 +26,6 @@ typedef struct {
   LinkedList *known_locations;
   cURL curl_handle;
   char default_temp_unit; /* C or F */
-  char *previous_api_call;
   char *api_result;
   int exit;
   int error_code; /* 0 == OK */
@@ -34,6 +33,9 @@ typedef struct {
 } app_state;
 
 /* FUNCTIONS  */
+
+int app_seconds_to_next_api_update(cURL *_curl, city *_city);
+
 app_state *app_create();
 void app_dispose(app_state *_app);
 

@@ -4,7 +4,7 @@
 #include "linked_list.h"
 
 extern char *template;
-/* todo JJ måste betämma om vi ska använda city eller  appstates location
+/* todo JJ måste betämma om vi ska använda city eller appstates location
  * struct */
 typedef struct {
   char time[32];   /* ISO 8601 format, YYYY-MM-DDTHH:MM */

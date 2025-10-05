@@ -119,16 +119,30 @@ weather *City_get_weather(cURL *_curl, city *_city) {
            _city->latitude, _city->longitude);
 
   weather *weather_data = NULL;
+
+  /* todo jj: This works on my other project but here i dont really know how we
+   * save timestamps per city so i just leave this in a comment.
+   It also needs to be integrated as a check in the check cache logic below.
+   */
+  /*   size_t seconds_to_next_api_update =
+        app_seconds_to_next_api_update(_curl, _city);
+   */
+
+  /* todo we cant return from here because cache might exist but be stale */
+  /* check cache */
   if (check_weather_cache(file_name) == 0) {
     char *data = read_weather_cache(file_name);
     if (data != NULL) {
       weather_data = parse_weather_json(data);
       free(data);
       if (weather_data != NULL) {
+
         return weather_data;
       }
     }
   }
+
+  /* if cache does not exist ( todo or is stale) call API */
   char url[200];
   snprintf(url, 199, template, _city->latitude, _city->longitude);
   curl_perform(_curl, url);

@@ -37,6 +37,7 @@ int app_state_populate_known_locations_from_testdata(app_state *_app) {
   return 0;
 }
 /* EXTERNAL FUNCTIONS */
+
 app_state *app_create() {
   app_state *app = (app_state *)malloc(sizeof(app_state));
 
@@ -81,11 +82,42 @@ int app_init_defaults(app_state *_app) {
   return 0;
 }
 
+int app_seconds_to_next_api_update(cURL *_curl, city *_city) {
+  size_t prev_call = (size_t)_city->timestamp_prev_api_call;
+  if (prev_call <= 0)
+    return 0; /* prev_call is 0 before first call. check for 0 so we can divide
+                 below  */
+  size_t now = (size_t)time(NULL);
+  size_t interval = (size_t)API_DATA_RELEASE_ITERVAL_SECONDS;
+  size_t seconds_left = 0;
+
+  size_t quarters_from_now =
+      now / interval; /* nr of intervals from now to 1970 */
+  size_t quarters_from_prev_call =
+      prev_call / interval; /* nr of intervals from prev_call to 1970 */
+
+  /* if we are in a different interval, check api */
+  if (quarters_from_now > quarters_from_prev_call)
+    return 0;
+
+  /* Calculate when next interval starts */
+  size_t next_interval_start = (quarters_from_now + 1) * interval;
+
+  seconds_left =
+      next_interval_start - now; // Return seconds until next api refresh
+
+  /* todo remove debug print */
+  printf("No API call sent, %02zum %02zus left until new data is released\n",
+         seconds_left / 60, seconds_left % 60);
+
+  return seconds_left;
+}
+
 void app_list_cities(app_state *_app) {
 
   for (int i = 0; i < (int)_app->known_locations->size; i++) {
     city *item = (city *)(LinkedList_get_index(_app->known_locations, i)->item);
-    printf("%3d: %s) \n", i + 1, item->name);
+    printf("%3d: %s \n", i + 1, item->name);
   }
   printf("  0: exit\n");
 }
