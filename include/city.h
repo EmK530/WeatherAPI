@@ -12,7 +12,7 @@ typedef struct {
       temperature; /* double needed for wind chill or heat index calculations */
   double windspeed;
   float winddirection;
-  char is_day; /* todo perhaps use bool? */
+  char is_day;
   int weathercode;
 } weather;
 

@@ -8,8 +8,7 @@ int check_weather_cache(char *cityName);
 void print_temperature(char *cityName);
 
 typedef struct {
-  char time[20]; /* todo how long can a ISO 8601 time string be? 20 might be to
-                    small */
+  char time[20];
   int interval;
   double temperature;
   double windspeed;
