@@ -8,7 +8,6 @@
 #include <string.h>
 #include <time.h>
 
-/**/
 int check_weather_cache(char *file_name) {
 
   /*  Finns staden lokalt? */
@@ -17,7 +16,12 @@ int check_weather_cache(char *file_name) {
   if (!root) {
     return 1;
   }
-
+  /* todo JJ: We currently check if city exists and then we check if its data is
+  old in a bunch of diffrent spots in this file. This makes it easy to
+  accidentally get old and new data when querying diffrent fields. In my
+  refactor i placed all the data in the linked list and the get_temp etc
+  funcitons only fetch the existing data. Every function should not have to
+  check. */
   /* Staden finns lokalt, är den gammal? */
   json_t *current_weather = json_object_get(root, "current_weather");
   if (!json_is_object(current_weather)) {

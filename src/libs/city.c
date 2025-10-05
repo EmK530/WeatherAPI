@@ -26,15 +26,8 @@ const char *cities = "Stockholm:59.3293:18.0686\n"
 char *template = "https://api.open-meteo.com/v1/"
                  "forecast?latitude=%lf&longitude=%lf&current_weather=true";
 
-/* JJ
-These two only work for the test data. We need to build a parser that gets all
-the data into RAM so we only read from disk at startup.
-*/
-
-// TODO: void list_cities(linked_list* _cities)
 void list_cities() {
   const char *scan1 = cities;
-  /* todo 16 is to small for many location names */
   char name[16];
   while (*scan1 != '\0') {
     sscanf(scan1, "%16[^:]", name);
@@ -48,14 +41,11 @@ void list_cities() {
   }
 }
 
-// TODO: city* get_city(linked_list* _cities, char* name)
 int find_city(char *input, char *name, double *lat, double *lon) {
   const char *scan1 = cities;
   while (*scan1 != '\0') {
     sscanf(scan1, "%16[^:]:%lf:%lf", name, lat, lon);
-    /* todo write own strcmp that is not case sensitive */
     if (strcmp(name, input) == 0) {
-      /* todo 0 is success, 1 is error */
       return 1;
     }
     scan1 = strchr(scan1, '\n');

@@ -3,7 +3,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-/* add 4th void* user pointer for using CURLOPT_WRITEDATA */
 size_t write_response(void *response, size_t size, size_t nmemb, void *userp) {
   size_t total = size * nmemb;
   cURL *curl = (cURL *)userp;

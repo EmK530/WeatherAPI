@@ -119,9 +119,6 @@ void app_print_current_weather(app_state *_app) {
 }
 
 void set_current_location(app_state *_app, int _selection) {
-  /* structs can be copied in C, even if they have arrays inside them */
-  //_state->current_location = _state->known_locations.locations[_selection -
-  // 1];
   _app++;
   _selection++;
 }
