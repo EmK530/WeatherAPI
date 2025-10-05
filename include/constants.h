@@ -5,4 +5,6 @@
 #define MAX_URL_LENGTH 256
 #define MAX_LOCATIONS 1024
 
+#define MIN_SECONDS_BETWEEN_CALLS 5
+
 #endif /* CONSTANTS_H */

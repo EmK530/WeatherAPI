@@ -4,7 +4,8 @@
 #include "linked_list.h"
 
 extern char *template;
-
+/* todo JJ måste betämma om vi ska använda city eller  appstates location
+ * struct */
 typedef struct {
   char time[32];   /* ISO 8601 format, YYYY-MM-DDTHH:MM */
   size_t interval; /* 900 seconds = 15 min interval between measurements */
@@ -20,6 +21,7 @@ typedef struct {
   char *name;
   float latitude;
   float longitude;
+  size_t timestamp_prev_api_call;
 } city;
 
 void list_cities();

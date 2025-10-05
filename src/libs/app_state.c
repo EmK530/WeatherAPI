@@ -82,10 +82,12 @@ int app_init_defaults(app_state *_app) {
 }
 
 void app_list_cities(app_state *_app) {
+
   for (int i = 0; i < (int)_app->known_locations->size; i++) {
     city *item = (city *)(LinkedList_get_index(_app->known_locations, i)->item);
-    printf("[%02d]: %s\n", i + 1, item->name);
+    printf("%3d: %s) \n", i + 1, item->name);
   }
+  printf("  0: exit\n");
 }
 
 int app_get_weather_by_index(app_state *_app, int _index) {

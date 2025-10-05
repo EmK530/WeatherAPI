@@ -18,6 +18,7 @@ int main() {
 
   do {
     app_list_cities(app);
+
     scanf("%15s", input);
     selection = atoi(input);
     if (app_get_weather_by_index(app, selection - 1) >= 0) {
