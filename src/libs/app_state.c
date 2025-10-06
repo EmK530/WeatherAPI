@@ -49,9 +49,7 @@ void app_dispose(app_state *_app) {
     LinkedList_dispose(_app->known_locations, City_dispose);
   }
   curl_dispose(&_app->curl_handle);
-  if (_app->current_location.current_weather) {
-    free(_app->current_location.current_weather);
-  }
+
   free(_app);
 }
 
@@ -133,23 +131,17 @@ int app_get_weather_by_index(app_state *_app, int _index) {
   if (result == NULL) {
     return -1;
   }
-  if (_app->current_location.current_weather != NULL) {
-    free(_app->current_location.current_weather);
-  }
-  _app->current_location.name = item->name; // maybe strdup, might be more clean
-  _app->current_location.latitude = item->latitude;
-  _app->current_location.longitude = item->longitude;
-  _app->current_location.current_weather = result;
+  _app->current_city = item; // maybe strdup, might be more clean
+  _app->current_weather = result;
   return 0;
 }
 
 void app_print_current_weather(app_state *_app) {
-  location loc = _app->current_location;
+  weather *data = _app->current_weather;
   printf("\tLocation:\t%s\n"
          "\tTemperature:\t%f\n"
          "\tWindspeed:\t%f\n\n",
-         loc.name, loc.current_weather->temperature,
-         loc.current_weather->windspeed);
+         _app->current_city->name, data->temperature, data->windspeed);
 }
 
 void set_current_location(app_state *_app, int _selection) {

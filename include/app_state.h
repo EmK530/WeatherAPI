@@ -8,6 +8,8 @@
 #include <stddef.h>
 
 typedef struct {
+  city *current_city;
+  weather *current_weather;
   LinkedList *known_locations;
   cURL curl_handle;
 } app_state;
