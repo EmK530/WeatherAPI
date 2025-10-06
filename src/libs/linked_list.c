@@ -133,11 +133,13 @@ void LinkedList_clear(LinkedList *list, void free_function(void *)) {
     free(cur);
     cur = next;
   }
+
   list->head = NULL;
   list->tail = NULL;
   list->size = 0;
 }
 void LinkedList_dispose(LinkedList *list, void free_function(void *)) {
   LinkedList_clear(list, free_function);
+
   free(list);
 }

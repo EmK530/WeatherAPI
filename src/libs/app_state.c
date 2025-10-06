@@ -49,9 +49,7 @@ void app_dispose(app_state *_app) {
     LinkedList_dispose(_app->known_locations, City_dispose);
   }
   curl_dispose(&_app->curl_handle);
-  if (_app->current_location.current_weather) {
-    free(_app->current_location.current_weather);
-  }
+
   free(_app);
 }
 
@@ -119,37 +117,28 @@ void app_list_cities(app_state *_app) {
     city *item = (city *)(LinkedList_get_index(_app->known_locations, i)->item);
     printf("%3d: %s \n", i + 1, item->name);
   }
-  printf("  0: exit\n");
+  printf("  0: Exit\n");
 }
 
-int app_get_weather_by_index(app_state *_app, int _index) {
-  if (_index >= (int)_app->known_locations->size || _index < 0) {
+int app_get_weather_by_index(app_state *_app, long _index) {
+  if (_index >= (long)_app->known_locations->size || _index < 0) {
     return -1;
   }
   city *item =
       (city *)(LinkedList_get_index(_app->known_locations, _index)->item);
 
-  weather *result = City_get_weather(&_app->curl_handle, item);
-  if (result == NULL) {
-    return -1;
-  }
-  if (_app->current_location.current_weather != NULL) {
-    free(_app->current_location.current_weather);
-  }
-  _app->current_location.name = item->name; // maybe strdup, might be more clean
-  _app->current_location.latitude = item->latitude;
-  _app->current_location.longitude = item->longitude;
-  _app->current_location.current_weather = result;
-  return 0;
+  int result = City_get_weather(&_app->curl_handle, item);
+  return result;
 }
 
-void app_print_current_weather(app_state *_app) {
-  location loc = _app->current_location;
+void app_print_weather(app_state *_app, int _index) {
+  city *item =
+      (city *)(LinkedList_get_index(_app->known_locations, _index)->item);
+  weather *data = item->current_weather;
   printf("\tLocation:\t%s\n"
          "\tTemperature:\t%f\n"
          "\tWindspeed:\t%f\n\n",
-         loc.name, loc.current_weather->temperature,
-         loc.current_weather->windspeed);
+         item->name, data->temperature, data->windspeed);
 }
 
 void set_current_location(app_state *_app, int _selection) {
