@@ -120,7 +120,7 @@ void app_list_cities(app_state *_app) {
   printf("  0: Exit\n");
 }
 
-int app_get_weather_by_index(app_state *_app, long _index) {
+int app_get_weather_by_index(app_state *_app, int _index) {
   if (_index >= (long)_app->known_locations->size || _index < 0) {
     return -1;
   }
