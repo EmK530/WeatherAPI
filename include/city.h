@@ -1,11 +1,10 @@
 #ifndef CITY_H
 #define CITY_H
-#include "curl_helper.h"
+#include "http.h"
 #include "linked_list.h"
 
 extern char *template;
-/* todo JJ måste betämma om vi ska använda city eller appstates location
- * struct */
+
 typedef struct {
   char time[32];   /* ISO 8601 format, YYYY-MM-DDTHH:MM */
   size_t interval; /* 900 seconds = 15 min interval between measurements */

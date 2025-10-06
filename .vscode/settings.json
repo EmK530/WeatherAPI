@@ -16,7 +16,8 @@
         "linked_list.h": "c",
         "functional": "c",
         "stddef.h": "c",
-        "constants.h": "c"
+        "constants.h": "c",
+        "http.h": "c"
     },
     "todo-tree.general.statusBar": "total",
     "todo-tree.general.tags": [

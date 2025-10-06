@@ -128,7 +128,6 @@ weather *City_get_weather(cURL *_curl, city *_city) {
         app_seconds_to_next_api_update(_curl, _city);
    */
 
-  /* todo we cant return from here because cache might exist but be stale */
   /* check cache */
   if (check_weather_cache(file_name) == 0) {
     char *data = read_weather_cache(file_name);
