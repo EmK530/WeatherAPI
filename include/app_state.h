@@ -25,7 +25,7 @@ int app_init_defaults(app_state *_app);
 
 void app_list_cities(app_state *_app);
 
-int app_get_weather_by_index(app_state *_app, int _index);
+int app_get_weather_by_index(app_state *_app, long _index);
 void app_print_current_weather(app_state *_app);
 // void set_current_location(app_state *_app, int _selection);
 

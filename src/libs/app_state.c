@@ -117,11 +117,11 @@ void app_list_cities(app_state *_app) {
     city *item = (city *)(LinkedList_get_index(_app->known_locations, i)->item);
     printf("%3d: %s \n", i + 1, item->name);
   }
-  printf("  0: exit\n");
+  printf("  0: Exit\n");
 }
 
-int app_get_weather_by_index(app_state *_app, int _index) {
-  if (_index >= (int)_app->known_locations->size || _index < 0) {
+int app_get_weather_by_index(app_state *_app, long _index) {
+  if (_index >= (long)_app->known_locations->size || _index < 0) {
     return -1;
   }
   city *item =

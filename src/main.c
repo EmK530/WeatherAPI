@@ -13,14 +13,14 @@ int main() {
 
   printf("Välkommen!\n\n");
 
-  char input[16];
-  int selection;
+  char input[128];
+  long selection;
 
   do {
     app_list_cities(app);
 
-    scanf("%15s", input);
-    selection = atoi(input);
+    scanf("%127s", input);
+    selection = strtol(input, NULL, 10);
     if (app_get_weather_by_index(app, selection - 1) >= 0) {
       app_print_current_weather(app);
     }
