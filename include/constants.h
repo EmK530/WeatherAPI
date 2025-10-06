@@ -9,4 +9,6 @@
 
 #define API_DATA_RELEASE_ITERVAL_SECONDS 900
 
+#define METEO_FORECAST_URL "https://api.open-meteo.com/v1/forecast?latitude=%lf&longitude=%lf&current_weather=true"
+
 #endif /* CONSTANTS_H */
