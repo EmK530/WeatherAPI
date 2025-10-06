@@ -86,7 +86,7 @@ int LinkedList_insert(LinkedList *list, size_t index, void *item) {
   return 0;
 }
 
-int LinkedList_remove(LinkedList *list, Node *item) {
+int LinkedList_remove(LinkedList *list, Node *item, void (*free_function)(void *)) {
   if (list == NULL || item == NULL)
     return 1;
 
@@ -109,19 +109,25 @@ int LinkedList_remove(LinkedList *list, Node *item) {
 
   item->back = NULL;
   item->front = NULL;
+
+  if(free_function != NULL)
+  {
+    free_function(item->item);
+  }
+
   free(item);
 
   return 0;
 }
 
-int LinkedList_pop(LinkedList *list, size_t index) {
+int LinkedList_pop(LinkedList *list, size_t index, void (*free_function)(void *)) {
   Node *item = LinkedList_get_index(list, index);
   if (item == NULL)
     return 1;
-  return LinkedList_remove(list, item);
+  return LinkedList_remove(list, item, free_function);
 }
 
-void LinkedList_clear(LinkedList *list, void free_function(void *)) {
+void LinkedList_clear(LinkedList *list, void (*free_function)(void *)) {
   if (list == NULL)
     return;
   Node *cur = list->head;
@@ -138,8 +144,8 @@ void LinkedList_clear(LinkedList *list, void free_function(void *)) {
   list->tail = NULL;
   list->size = 0;
 }
-void LinkedList_dispose(LinkedList *list, void free_function(void *)) {
-  LinkedList_clear(list, free_function);
-
-  free(list);
+void LinkedList_dispose(LinkedList **list, void (*free_function)(void *)) {
+  LinkedList_clear(*list, free_function);
+  free(*list);
+  *list = NULL;
 }
