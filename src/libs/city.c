@@ -81,7 +81,15 @@ int City_get_weather(cURL *_curl, city *_city) {
     char *data = read_weather_cache(file_name);
     if (data != NULL) {
       weather_data = parse_weather_json(data);
+      if (weather_data != NULL) {
+        if (_city->current_weather) {
+          free(_city->current_weather);
+        }
+        _city->current_weather = weather_data;
+      }
       free(data);
+      printf("\tWeather data for %s loaded from cache.\n", _city->name);
+      return 0;
     }
   }
   /* if cache does not exist ( todo or is stale) call API */
@@ -103,5 +111,6 @@ int City_get_weather(cURL *_curl, city *_city) {
     }
     _city->current_weather = weather_data;
   }
+  printf("\tWeather data for %s loaded from API.\n", _city->name);
   return 0;
 }

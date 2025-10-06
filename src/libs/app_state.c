@@ -171,5 +171,7 @@ void app_print_weather(app_state *_app, int _index) {
       (city *)(LinkedList_get_index(_app->known_locations, _index)->item);
   weather *data = item->current_weather;
 
-  printf("\t\t\t%s %.1lf°C\n", item->name, data->temperature);
+  printf("\t%s %.1lf°C\n", item->name, data->temperature);
+  printf("\tWindspeed: %s %.1lf\n", item->name, data->windspeed);
+  printf("\n");
 }
