@@ -21,6 +21,7 @@ typedef struct {
   float latitude;
   float longitude;
   size_t timestamp_prev_api_call;
+  weather *current_weather;
 } city;
 
 void list_cities();
@@ -30,6 +31,6 @@ city *City_create(char *_name, float _latitude, float _longitude);
 void City_dispose(void *_city);
 void City_parse_cities(LinkedList *_city_list, const char *_city_data);
 
-weather *City_get_weather(cURL *_curl, city *_city);
+int City_get_weather(cURL *_curl, city *_city);
 
 #endif

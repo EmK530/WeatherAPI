@@ -64,6 +64,7 @@ city *City_create(char *_name, float _latitude, float _longitude) {
   new_city->name = strdup(_name);
   new_city->latitude = _latitude;
   new_city->longitude = _longitude;
+  new_city->current_weather = NULL;
 
   return new_city;
 }
@@ -71,6 +72,9 @@ city *City_create(char *_name, float _latitude, float _longitude) {
 void City_dispose(void *_city) {
   city *pcity = (city *)_city;
   free(pcity->name);
+  if (pcity->current_weather) {
+    free(pcity->current_weather);
+  }
   free(pcity);
 }
 
@@ -113,7 +117,7 @@ void City_parse_cities(LinkedList *_city_list, const char *_city_data) {
   free(city_data_copy);
 }
 
-weather *City_get_weather(cURL *_curl, city *_city) {
+int City_get_weather(cURL *_curl, city *_city) {
   char file_name[50];
   snprintf(file_name, 49, "cache/%s_%.2f_%.2f.json", _city->name,
            _city->latitude, _city->longitude);
@@ -134,13 +138,8 @@ weather *City_get_weather(cURL *_curl, city *_city) {
     if (data != NULL) {
       weather_data = parse_weather_json(data);
       free(data);
-      if (weather_data != NULL) {
-
-        return weather_data;
-      }
     }
   }
-
   /* if cache does not exist ( todo or is stale) call API */
   char url[200];
   snprintf(url, 199, template, _city->latitude, _city->longitude);
@@ -151,6 +150,14 @@ weather *City_get_weather(cURL *_curl, city *_city) {
     if (weather_data != NULL) {
       write_weather_cache(file_name, _curl->data);
     }
+  } else {
+    return -1;
   }
-  return weather_data;
+  if (weather_data != NULL) {
+    if (_city->current_weather) {
+      free(_city->current_weather);
+    }
+    _city->current_weather = weather_data;
+  }
+  return 0;
 }

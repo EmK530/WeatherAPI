@@ -22,7 +22,7 @@ int main() {
     scanf("%15s", input);
     selection = atoi(input);
     if (app_get_weather_by_index(app, selection - 1) >= 0) {
-      app_print_current_weather(app);
+      app_print_weather(app, selection - 1);
     }
 
   } while (selection > 0);

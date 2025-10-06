@@ -127,21 +127,18 @@ int app_get_weather_by_index(app_state *_app, int _index) {
   city *item =
       (city *)(LinkedList_get_index(_app->known_locations, _index)->item);
 
-  weather *result = City_get_weather(&_app->curl_handle, item);
-  if (result == NULL) {
-    return -1;
-  }
-  _app->current_city = item; // maybe strdup, might be more clean
-  _app->current_weather = result;
-  return 0;
+  int result = City_get_weather(&_app->curl_handle, item);
+  return result;
 }
 
-void app_print_current_weather(app_state *_app) {
-  weather *data = _app->current_weather;
+void app_print_weather(app_state *_app, int _index) {
+  city *item =
+      (city *)(LinkedList_get_index(_app->known_locations, _index)->item);
+  weather *data = item->current_weather;
   printf("\tLocation:\t%s\n"
          "\tTemperature:\t%f\n"
          "\tWindspeed:\t%f\n\n",
-         _app->current_city->name, data->temperature, data->windspeed);
+         item->name, data->temperature, data->windspeed);
 }
 
 void set_current_location(app_state *_app, int _selection) {

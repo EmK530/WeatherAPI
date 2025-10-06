@@ -8,8 +8,6 @@
 #include <stddef.h>
 
 typedef struct {
-  city *current_city;
-  weather *current_weather;
   LinkedList *known_locations;
   cURL curl_handle;
 } app_state;
@@ -26,7 +24,7 @@ int app_init_defaults(app_state *_app);
 void app_list_cities(app_state *_app);
 
 int app_get_weather_by_index(app_state *_app, int _index);
-void app_print_current_weather(app_state *_app);
+void app_print_weather(app_state *_app, int _index);
 // void set_current_location(app_state *_app, int _selection);
 
 #endif /* APP_STATE_H */
