@@ -47,7 +47,7 @@ int app_state_populate_known_locations_from_testdata(app_state *_app) {
 
   // Clean up existing locations if any
   if (_app->known_locations != NULL) {
-    LinkedList_dispose(_app->known_locations, City_dispose);
+    LinkedList_dispose(&_app->known_locations, City_dispose);
   }
 
   _app->known_locations = LinkedList_create();
@@ -71,7 +71,7 @@ void app_dispose(app_state *_app) {
     return;
 
   if (_app->known_locations != NULL) {
-    LinkedList_dispose(_app->known_locations, City_dispose);
+    LinkedList_dispose(&_app->known_locations, City_dispose);
   }
   curl_dispose(&_app->curl_handle);
 
