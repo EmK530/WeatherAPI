@@ -5,32 +5,12 @@
 #include "linked_list.h"
 
 /**
- * @brief Structure to hold current weather data.
- */
-typedef struct {
-  char time[20];
-  int interval;
-  double temperature;
-  double windspeed;
-  int winddirection;
-  int is_day;
-  int weathercode;
-} current_weather;
-
-/**
  * @brief Checks if the weather cache for a given city is valid.
  * A cache is considered valid if it exists and is not outdated.
  * @param cityName The name of the city to check.
  * @return 0 if the cache exists and is fresh, 1 if it doesn't exist or is stale.
  */
 int check_weather_cache(char *cityName);
-
-/**
- * @brief Checks if a JSON cache file exists for a given city.
- * @param cityName The name of the city to check.
- * @return 1 if the cache file exists, 0 otherwise.
- */
-int does_json_exist(char *cityName);
 
 /**
  * @brief Reads a list of cities from a JSON file and populates a linked list.
