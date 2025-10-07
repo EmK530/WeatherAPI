@@ -4,7 +4,7 @@
 #include "city.h"
 #include "linked_list.h"
 
-// Structure to hold current weather data
+/* Structure to hold current weather data */
 typedef struct {
   char time[20];
   int interval;
